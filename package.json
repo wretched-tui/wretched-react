@@ -1,0 +1,55 @@
+{
+  "name": "wretched-react",
+  "description": "React Reconciler and renderer for Wretched",
+  "author": "Colin T.A. Gray <colinta@colinta.com>",
+  "contributors": [
+    "Shawn Chen <meishangchen@gmail.com>"
+  ],
+  "version": "1.0.4-alpha",
+  "license": "MIT",
+  "preferGlobal": false,
+  "repository": "git://github.com/wretched-tui/wretched-react.git",
+  "homepage": "https://github.com/wretched-tui/wretched-react",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "bugs": {
+    "url": "http://github.com/wretched-tui/wretched-react/issues"
+  },
+  "scripts": {
+    "publish": "npm publish --tag alpha",
+    "prepublishOnly": "yarn clean && yarn tsc",
+    "clean": "rm -rf dist/",
+    "build": "yarn clean && yarn tsc",
+    "demo": "yarn build && cd dist/demos/ && node --enable-source-maps --"
+  },
+  "keywords": [
+    "react",
+    "curses",
+    "tui",
+    "terminal",
+    "terminal-ui"
+  ],
+  "tags": [
+    "react",
+    "curses",
+    "tui",
+    "terminal"
+  ],
+  "engines": {
+    "node": ">= 18.12.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-reconciler": "^0.29.0",
+    "wretched": "../wretched"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.2",
+    "@types/react": "^18.2.39",
+    "@types/react-reconciler": "^0.28.8",
+    "typescript": "^5.1.6"
+  }
+}
