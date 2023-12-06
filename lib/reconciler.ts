@@ -393,13 +393,10 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
   return reconciler.getPublicRootInstance(fiber)
 }
 
-import {Test} from './demos/'
-
 export function run(component: ReactNode) {
-  // Screen.reset()
   const [screen, _, window] = Screen.start()
 
-  render(screen, window, React.createElement(Test))
+  render(screen, window, component)
 
-  // return [screen, window, component]
+  return [screen, window, component]
 }
