@@ -3,10 +3,21 @@ import {
   Box as WrBox,
   Button as WrButton,
   Checkbox as WrCheckbox,
+  Digits as WrDigits,
   Flex as WrFlex,
   Flow as WrFlow,
   Input as WrInput,
   Text as WrText,
+  // Collapsible
+  // CollapsibleText
+  // Drawer
+  // Dropdown
+  // Log
+  // ScrollableList
+  Separator as WrSeparator,
+  Slider as WrSlider,
+  Space as WrSpace,
+  // Tree
 } from 'wretched'
 
 type WretchedView<T extends abstract new (arg: any, ...args: any) => any> =

@@ -360,21 +360,21 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
     },
   })
 
-  let indent = ''
-  for (const key in reconciler) {
-    const fn = (reconciler as any)[key]
-    if (fn instanceof Function) {
-      ;(reconciler as any)[key] = (...args: any[]) => {
-        const prevIndent = indent
-        console.log(`${indent}==> ${key}(`, ...args, ')')
-        indent += '  '
-        const ret = fn.apply(reconciler, args)
-        indent = prevIndent
-        console.log(`${indent}<== ${key}`)
-        return ret
-      }
-    }
-  }
+  // let indent = ''
+  // for (const key in reconciler) {
+  //   const fn = (reconciler as any)[key]
+  //   if (fn instanceof Function) {
+  //     ;(reconciler as any)[key] = (...args: any[]) => {
+  //       const prevIndent = indent
+  //       console.log(`${indent}==> ${key}(`, ...args, ')')
+  //       indent += '  '
+  //       const ret = fn.apply(reconciler, args)
+  //       indent = prevIndent
+  //       console.log(`${indent}<== ${key}`)
+  //       return ret
+  //     }
+  //   }
+  // }
 
   const fiber = reconciler.createContainer(
     window,
@@ -393,8 +393,9 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
   return reconciler.getPublicRootInstance(fiber)
 }
 
-export function run(component: ReactNode) {
-  const [screen, _, window] = Screen.start()
+export async function run(component: ReactNode) {
+  const start = await Screen.start()
+  const [screen, _, window] = start
 
   render(screen, window, component)
 
