@@ -77,5 +77,7 @@ typescript@^5.1.6:
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.1.6.tgz"
   integrity sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==
 
-wretched@../wretched:
-  version "1.0.3-alpha"
+wretched@^1.0.6-alpha:
+  version "1.0.6-alpha"
+  resolved "https://registry.yarnpkg.com/wretched/-/wretched-1.0.6-alpha.tgz#1ca3fa7ea25e604be78fa898c8db5ebb7171befb"
+  integrity sha512-wGQ5+z6zHMtCKQV6Sf3/chLi/dZLBN+KPSoJ9ys5yJezlHV4x7rdAGu74x0WvF1KM3K/bkxmnZ5CtvyuAQd1Bw==
