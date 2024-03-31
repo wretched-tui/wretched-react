@@ -57,8 +57,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       _hostContext: HostContext,
       _internalInstanceHandle: Object,
     ) {
-      console.log(`🚧🚧🚧 ============ ${type}`)
-
       if ('children' in props) {
         if (type === 'wr-text') {
           const text = childrenToText(props.children as any[])
@@ -66,13 +64,25 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
             ...props,
             text,
           }
-          console.log(`🚧🚧🚧 ============ text:`, text)
         } else {
-          console.log(`🚧🚧🚧 ============ children:`, props.children)
           props = {...props}
         }
 
         delete (props as any)['children']
+      }
+
+      if ('child' in props) {
+        if (type === 'wr-text') {
+          const text = childrenToText([props.child as any])
+          props = {
+            ...props,
+            text,
+          }
+        } else {
+          props = {...props}
+        }
+
+        delete (props as any)['child']
       }
 
       switch (type) {
@@ -100,48 +110,21 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       }
     },
     createTextInstance(text: string) {
-      console.log(`🪘🪘🪘 ============ createTextInstance:`)
       return new Text({text})
     },
 
     appendInitialChild(parentInstance: Container, child: View) {
-      console.log(
-        `🪘🪘🪘 ============ appendInitialChild:`,
-        child.constructor.name,
-        'to',
-        parentInstance.constructor.name,
-      )
       parentInstance.add(child)
     },
     appendChild(parentInstance: Container, child: View) {
-      console.log(
-        `🗿🗿🗿 ============  appendChild:`,
-        child.constructor.name,
-        'to',
-        parentInstance.constructor.name,
-      )
       parentInstance.add(child)
     },
     insertBefore(parentInstance: Container, child: View, beforeChild: View) {
-      console.log(
-        `🛟🛟🛟 ============ insertBefore:`,
-        child.constructor.name,
-        'to',
-        parentInstance.constructor.name,
-        'before',
-        beforeChild.constructor.name,
-      )
       const index = parentInstance.children.indexOf(beforeChild)
       parentInstance.add(child, index === -1 ? undefined : index)
     },
 
     appendChildToContainer(rootWindow: Window, child: View) {
-      console.log(
-        `🎡🎡🎡 ============  appendChildToContainer:`,
-        child.constructor.name,
-        'to',
-        rootWindow.constructor.name,
-      )
       rootWindow.add(child)
     },
     insertInContainerBefore(
@@ -149,29 +132,14 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       child: View,
       beforeChild: View,
     ) {
-      console.log(
-        `🎡🎡🎡 ============  insertInContainerBefore:`,
-        child.constructor.name,
-        'to',
-        rootWindow.constructor.name,
-        'before',
-        beforeChild.constructor.name,
-      )
       const index = rootWindow.children.indexOf(beforeChild)
       rootWindow.add(child, index === -1 ? undefined : index)
     },
 
     removeChild(_: Container, child: View) {
-      console.log(`🎡🎡🎡 ============  removeChild:`, child.constructor.name)
       child.removeFromParent()
     },
     removeChildFromContainer(_rootWindow: Window, child: View) {
-      console.log(
-        `🎡🎡🎡 ============  removeChildFromContainer:`,
-        child.constructor.name,
-        'from',
-        _rootWindow.constructor.name,
-      )
       child.removeFromParent()
     },
     detachDeletedInstance(node: View) {},
@@ -307,7 +275,9 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
   return reconciler.getPublicRootInstance(fiber)
 }
 
-export async function run(component: ReactNode) {
+export async function run(
+  component: ReactNode,
+): Promise<[Screen, Window, React.ReactNode]> {
   const start = await Screen.start()
   const [screen, _, window] = start
 
