@@ -26,7 +26,7 @@ type WretchedView<T extends abstract new (arg: any, ...args: any) => any> =
 type WretchedContainer<
   T extends abstract new (arg: any, ...args: any) => any,
   Children extends keyof ConstructorParameters<T>[0] = 'children',
-> = WretchedView<T> & {[Key in Children]?: React.ReactNode}
+> = Omit<WretchedView<T>, Children> & {[Key in Children]?: React.ReactNode}
 
 type WretchedText<T extends abstract new (arg: any, ...args: any) => any> =
   WretchedView<T> & {children?: React.ReactNode}
@@ -50,26 +50,32 @@ declare global {
   }
 }
 
-export function Box(reactProps: JSX.IntrinsicElements['wr-box']) {
+export function Box(reactProps: JSX.IntrinsicElements['wr-box']): JSX.Element {
   const {children, ...props} = reactProps
   return <wr-box {...props}>{children}</wr-box>
 }
 
-export function Button(reactProps: JSX.IntrinsicElements['wr-button']) {
+export function Button(
+  reactProps: JSX.IntrinsicElements['wr-button'],
+): JSX.Element {
   const {children, ...props} = reactProps
   return <wr-button {...props}>{children}</wr-button>
 }
-export function Checkbox(reactProps: JSX.IntrinsicElements['wr-checkbox']) {
+export function Checkbox(
+  reactProps: JSX.IntrinsicElements['wr-checkbox'],
+): JSX.Element {
   const {children, ...props} = reactProps
   return <wr-checkbox {...props}>{children}</wr-checkbox>
 }
-export function Input(reactProps: JSX.IntrinsicElements['wr-input']) {
+export function Input(
+  reactProps: JSX.IntrinsicElements['wr-input'],
+): JSX.Element {
   const {children, ...props} = reactProps
   return <wr-input {...props}>{children}</wr-input>
 }
 export function Collapsible(
   reactProps: JSX.IntrinsicElements['wr-collapsible'],
-) {
+): JSX.Element {
   const {collapsedView, expandedView, ...props} = reactProps
   return (
     <wr-collapsible {...props}>
@@ -78,10 +84,12 @@ export function Collapsible(
     </wr-collapsible>
   )
 }
-export function Text(reactProps: JSX.IntrinsicElements['wr-text']) {
+export function Text(
+  reactProps: JSX.IntrinsicElements['wr-text'],
+): JSX.Element {
   return <wr-text {...reactProps} />
 }
-export function Br() {
+export function Br(): JSX.Element {
   return <wr-br />
 }
 

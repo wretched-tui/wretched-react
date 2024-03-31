@@ -25,7 +25,7 @@ export function isSame(lhs: any, rhs: any, depth = 0): boolean {
     return false
   }
 
-  if (lhs instanceof Array) {
+  if (Array.isArray(lhs)) {
     return (
       lhs.length === rhs.length &&
       lhs.every((value, index) => isSame(value, rhs[index], depth + 1))
