@@ -18,9 +18,14 @@ import {
 
 import {isSame} from './isSame'
 import {childToText, childrenToText} from './childToText'
+import {ConsoleLog} from 'wretched'
+import {Digits} from 'wretched'
 
 type Props = {}
-interface HostContext {}
+interface HostContext {
+  screen: Screen
+  window: Window
+}
 
 export function render(screen: Screen, window: Window, rootNode: ReactNode) {
   function rerender() {
@@ -45,9 +50,7 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       return {type}
     },
     clearContainer(rootWindow: Window) {
-      for (const child of rootWindow.children) {
-        child.removeFromParent()
-      }
+      rootWindow.removeAllChildren()
     },
 
     createInstance(
@@ -94,6 +97,10 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
           return new Checkbox(props as any)
         case 'wr-collapsible':
           return new Collapsible(props as any)
+        case 'wr-console':
+          return new ConsoleLog(props as any)
+        case 'wr-digits':
+          return new Digits(props as any)
         case 'wr-flow':
           return new Flow(props as any)
         case 'wr-flex':

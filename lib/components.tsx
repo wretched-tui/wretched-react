@@ -1,9 +1,10 @@
 import React from 'react'
-import {
+import type {
   Box as WrBox,
   Button as WrButton,
   Checkbox as WrCheckbox,
   Collapsible as WrCollapsible,
+  ConsoleLog as WrConsoleLog,
   // CollapsibleText,
   Digits as WrDigits,
   // Drawer,
@@ -20,13 +21,15 @@ import {
   // Tree,
 } from 'wretched'
 
-type WretchedView<T extends abstract new (arg: any, ...args: any) => any> =
-  Omit<ConstructorParameters<T>[0], 'children'>
+type WretchedView<
+  T extends abstract new (arg: any, ...args: any) => any,
+  Children extends keyof ConstructorParameters<T>[0] = 'children',
+> = Omit<NonNullable<ConstructorParameters<T>[0]>, Children>
 
 type WretchedContainer<
   T extends abstract new (arg: any, ...args: any) => any,
-  Children extends keyof ConstructorParameters<T>[0] = 'children',
-> = Omit<WretchedView<T>, Children> & {[Key in Children]?: React.ReactNode}
+  Children extends keyof NonNullable<ConstructorParameters<T>[0]> = 'children',
+> = WretchedView<T, Children> & {[Key in Children]?: React.ReactNode}
 
 type WretchedText<T extends abstract new (arg: any, ...args: any) => any> =
   WretchedView<T> & {children?: React.ReactNode}
@@ -42,9 +45,11 @@ declare global {
       'wr-input': WretchedContainer<typeof WrInput>
       'wr-collapsible': WretchedContainer<
         typeof WrCollapsible,
-        'collapsedView' | 'expandedView'
+        'collapsedView' | 'expandedView' | 'children'
       >
+      'wr-console': WretchedView<typeof WrConsoleLog>
       'wr-text': WretchedText<typeof WrText>
+      'wr-digits': WretchedView<typeof WrDigits>
       'wr-br': {}
     }
   }
@@ -67,12 +72,14 @@ export function Checkbox(
   const {children, ...props} = reactProps
   return <wr-checkbox {...props}>{children}</wr-checkbox>
 }
-export function Input(
-  reactProps: JSX.IntrinsicElements['wr-input'],
-): JSX.Element {
-  const {children, ...props} = reactProps
-  return <wr-input {...props}>{children}</wr-input>
+
+export function Input(props: JSX.IntrinsicElements['wr-input']): JSX.Element {
+  return <wr-input {...props} />
 }
+export function Digits(props: JSX.IntrinsicElements['wr-digits']): JSX.Element {
+  return <wr-digits {...props} />
+}
+
 export function Collapsible(
   reactProps: JSX.IntrinsicElements['wr-collapsible'],
 ): JSX.Element {
@@ -91,6 +98,11 @@ export function Text(
 }
 export function Br(): JSX.Element {
   return <wr-br />
+}
+export function ConsoleLog(
+  props: JSX.IntrinsicElements['wr-console'],
+): JSX.Element {
+  return <wr-console {...props} />
 }
 
 interface Flex {
