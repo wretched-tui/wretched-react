@@ -10,7 +10,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-reconciler": "^0.29.0",
-    "wretched": "^1.0.9-alpha",
+    "wretched": "^1.0.10-alpha",
     "wretched-react": "file:../dist"
   },
   "devDependencies": {
