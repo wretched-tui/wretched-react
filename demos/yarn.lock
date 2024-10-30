@@ -44,7 +44,7 @@ typescript@^5.4.3:
 "wretched-react@file:../dist":
   version "0.0.0"
 
-wretched@^1.0.10-alpha:
-  version "1.0.10-alpha"
-  resolved "https://registry.yarnpkg.com/wretched/-/wretched-1.0.10-alpha.tgz#622901d3d13b03c3babf5acef5c55517fda543d5"
-  integrity sha512-Vf51pdY25ZIWiHyg8GcN7+1wOTdj0FUZKwN/IoG77X+ZRfIRtZaRCWjppJqZOkdyc5Adu7mkcuAd2Ok509zJ8g==
+wretched@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/wretched/-/wretched-1.0.0.tgz#24c12ec1c92ace75818f05b479c7c35a75e74b72"
+  integrity sha512-gfMCbqAfUfAXUh5gQdNDHbxt87F2EpGOva7ybBrvsR2um6kaxkFBmLfuZjPebrAISJIVhlNN3vdms+guYDIriw==

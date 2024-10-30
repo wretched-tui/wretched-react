@@ -26,7 +26,8 @@
     "gittag": "git tag $(node -e 'console.log(require(\"./package\").version)')",
     "clean": "rm -rf dist/",
     "build": "yarn clean && yarn tsc",
-    "demo": "yarn build && cd demos/ && yarn demo"
+    "checksum": ". scripts/check.sh lib",
+    "demo": "yarn checksum && cd demos/ && yarn demo"
   },
   "keywords": [
     "react",
@@ -49,12 +50,13 @@
     "react-reconciler": "^0.29.0"
   },
   "dependencies": {
-    "wretched": "1.0.10-alpha"
+    "wretched": "1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.3.2",
     "@types/react": "^18.2.39",
     "@types/react-reconciler": "^0.28.8",
+    "ssed": "^1.5.0",
     "typescript": "^5.4.3"
   }
 }
