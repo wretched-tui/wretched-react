@@ -5,7 +5,7 @@
   "contributors": [
     "Shawn Chen <meishangchen@gmail.com>"
   ],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "preferGlobal": false,
   "repository": {
@@ -50,7 +50,7 @@
     "react-reconciler": "^0.29.0"
   },
   "dependencies": {
-    "wretched": "^1.0.4"
+    "wretched": "^1.0.5"
   },
   "devDependencies": {
     "@types/node": "^20.3.2",

@@ -42,11 +42,11 @@ typescript@^5.4.3:
   integrity sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==
 
 "wretched-react@file:..":
-  version "1.0.10-alpha"
-  dependencies:
-    wretched "^1.0.1"
-
-wretched@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.yarnpkg.com/wretched/-/wretched-1.0.1.tgz#410d51f666379caecff399bb4d32eab8c5034c1d"
-  integrity sha512-DK8fFMkodP5CGLzfIIbh5N0Un0duyUY0lAoUqP2mYrA5+NQExU58xajvlY9PzBu62glwwxl8+Er9wZ5LjPNvSQ==
+  dependencies:
+    wretched "^1.0.5"
+
+wretched@^1.0.4, wretched@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/wretched/-/wretched-1.0.5.tgz#3ec9acc5e258226bfc0484ee21e91c8dd8642b74"
+  integrity sha512-OdK7XxTrRIAq2rCmTf9nyA9zQP5HWytrn5HKed0llXCiu8yEvJRw6vVFDfl9o2NFWaEdALk4xfLOrE6tb6dtpg==
