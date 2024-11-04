@@ -34,6 +34,11 @@ csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.3.tgz#d80ff294d114fb0e6ac500fbf85b60137d7eff81"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
 
+ssed@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/ssed/-/ssed-1.5.0.tgz#797df7e57614e34b463ec9b705e0b6ba64316f47"
+  integrity sha512-mhsPz0VDXeB/CasmMTTnYGjyqFk4nWNV++y7hia86n5iSLI6b3BUkEQ517bqAGQIbnOC4ATuHhaUJHmYgscKDg==
+
 typescript@^5.4.3:
   version "5.4.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.3.tgz#5c6fedd4c87bee01cd7a528a30145521f8e0feff"
@@ -44,7 +49,7 @@ undici-types@~5.26.4:
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
   integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
 
-wretched@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/wretched/-/wretched-1.0.0.tgz#24c12ec1c92ace75818f05b479c7c35a75e74b72"
-  integrity sha512-gfMCbqAfUfAXUh5gQdNDHbxt87F2EpGOva7ybBrvsR2um6kaxkFBmLfuZjPebrAISJIVhlNN3vdms+guYDIriw==
+wretched@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/wretched/-/wretched-1.0.4.tgz#fdeded39134b69abe1e5280a07afc992f0ec19e0"
+  integrity sha512-HkwOMAzM4mdJ4hFcuq1Zq6uGgB/ZBR9aV0t5fx+8Zdd2sTRYXA1bbSo9jrzZM9OoKg5JFfBf9UQpRwf4VMTCWw==

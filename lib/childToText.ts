@@ -9,7 +9,7 @@ export function childToText(child: any) {
     return String(child)
   } else if (typeof child === 'string') {
     return child
-  } else if (child.type === 'wr-br') {
+  } else if (child.type === 'br' || child.type === 'wr-br') {
     return '\n'
   } else if (child.type instanceof Function) {
     return childToText(child.type({}))

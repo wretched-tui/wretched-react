@@ -12,6 +12,7 @@ export function isSame(lhs: any, rhs: any, depth = 0): boolean {
     typeof lhs === 'string' ||
     typeof lhs === 'undefined' ||
     typeof lhs === 'boolean' ||
+    typeof lhs === 'function' ||
     typeof lhs === 'number'
   ) {
     return lhs === rhs

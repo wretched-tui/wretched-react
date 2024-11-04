@@ -5,14 +5,14 @@
   "scripts": {
     "build": "yarn clean && yarn tsc",
     "checksum": ". ../scripts/check.sh .",
-    "demo": "yarn checksum && cd dist && node --enable-source-maps -- index",
+    "demo": "yarn checksum && cd dist && node --enable-source-maps --",
     "clean": "rm -rf dist/"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-reconciler": "^0.29.0",
-    "wretched": "^1.0.0",
-    "wretched-react": "file:../dist"
+    "react": "^18.3.1",
+    "react-reconciler": "^0.29.2",
+    "wretched": "^1.0.4",
+    "wretched-react": "file:../"
   },
   "devDependencies": {
     "typescript": "^5.4.3"

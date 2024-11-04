@@ -10,10 +10,10 @@ import type {
   // Drawer,
   // Dropdown,
   Flex as WrFlex,
-  Flow as WrFlow,
   Input as WrInput,
   // Log,
   // ScrollableList,
+  Scrollable as WrScrollable,
   Separator as WrSeparator,
   Slider as WrSlider,
   Space as WrSpace,
@@ -32,25 +32,24 @@ type WretchedContainer<
 > = WretchedView<T, Children> & {[Key in Children]?: React.ReactNode}
 
 type WretchedText<T extends abstract new (arg: any, ...args: any) => any> =
-  WretchedView<T> & {children?: React.ReactNode}
+  Omit<WretchedView<T>, 'text'> & {children?: React.ReactNode}
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
       'wr-box': WretchedContainer<typeof WrBox>
       'wr-button': WretchedContainer<typeof WrButton>
+      'wr-br': {}
+      'wr-digits': WretchedView<typeof WrDigits>
       'wr-checkbox': WretchedContainer<typeof WrCheckbox>
-      'wr-flex': WretchedContainer<typeof WrFlex>
-      'wr-flow': WretchedContainer<typeof WrFlow>
-      'wr-input': WretchedContainer<typeof WrInput>
       'wr-collapsible': WretchedContainer<
         typeof WrCollapsible,
-        'collapsedView' | 'expandedView' | 'children'
+        'collapsed' | 'expanded' | 'children'
       >
       'wr-console': WretchedView<typeof WrConsoleLog>
+      'wr-flex': WretchedContainer<typeof WrFlex>
+      'wr-input': WretchedContainer<typeof WrInput>
       'wr-text': WretchedText<typeof WrText>
-      'wr-digits': WretchedView<typeof WrDigits>
-      'wr-br': {}
     }
   }
 }
@@ -73,24 +72,33 @@ export function Checkbox(
   return <wr-checkbox {...props}>{children}</wr-checkbox>
 }
 
-export function Input(props: JSX.IntrinsicElements['wr-input']): JSX.Element {
-  return <wr-input {...props} />
+export function Input(
+  reactProps: JSX.IntrinsicElements['wr-input'],
+): JSX.Element {
+  return <wr-input {...reactProps} />
 }
-export function Digits(props: JSX.IntrinsicElements['wr-digits']): JSX.Element {
-  return <wr-digits {...props} />
+export function Digits(
+  reactProps: JSX.IntrinsicElements['wr-digits'],
+): JSX.Element {
+  return <wr-digits {...reactProps} />
 }
 
 export function Collapsible(
   reactProps: JSX.IntrinsicElements['wr-collapsible'],
 ): JSX.Element {
-  const {collapsedView, expandedView, ...props} = reactProps
+  const {collapsed, expanded, ...props} = reactProps
   return (
     <wr-collapsible {...props}>
-      {collapsedView}
-      {expandedView}
+      {collapsed}
+      {expanded}
     </wr-collapsible>
   )
 }
+
+/**
+ * <Text /> is a container that sets the text properties of child TextLiterals
+ * (font, style) and TextContainers (wrap, alignment)
+ */
 export function Text(
   reactProps: JSX.IntrinsicElements['wr-text'],
 ): JSX.Element {
@@ -99,10 +107,11 @@ export function Text(
 export function Br(): JSX.Element {
   return <wr-br />
 }
+
 export function ConsoleLog(
-  props: JSX.IntrinsicElements['wr-console'],
+  reactProps: JSX.IntrinsicElements['wr-console'],
 ): JSX.Element {
-  return <wr-console {...props} />
+  return <wr-console {...reactProps} />
 }
 
 interface Flex {
@@ -131,7 +140,7 @@ FlexComponent.down = function FlexLeft(
 ) {
   const {children, ...props} = reactProps
   return (
-    <wr-flex direction="topToBottom" {...props}>
+    <wr-flex direction="down" {...props}>
       {children}
     </wr-flex>
   )
@@ -141,7 +150,7 @@ FlexComponent.up = function FlexLeft(
 ) {
   const {children, ...props} = reactProps
   return (
-    <wr-flex direction="bottomToTop" {...props}>
+    <wr-flex direction="up" {...props}>
       {children}
     </wr-flex>
   )
@@ -151,7 +160,7 @@ FlexComponent.right = function FlexLeft(
 ) {
   const {children, ...props} = reactProps
   return (
-    <wr-flex direction="leftToRight" {...props}>
+    <wr-flex direction="right" {...props}>
       {children}
     </wr-flex>
   )
@@ -161,73 +170,10 @@ FlexComponent.left = function FlexLeft(
 ) {
   const {children, ...props} = reactProps
   return (
-    <wr-flex direction="rightToLeft" {...props}>
+    <wr-flex direction="left" {...props}>
       {children}
     </wr-flex>
   )
 }
 
-interface Flow {
-  (reactProps: JSX.IntrinsicElements['wr-flow']): JSX.Element
-  down(
-    reactProps: Omit<JSX.IntrinsicElements['wr-flow'], 'direction'>,
-  ): JSX.Element
-  up(
-    reactProps: Omit<JSX.IntrinsicElements['wr-flow'], 'direction'>,
-  ): JSX.Element
-  left(
-    reactProps: Omit<JSX.IntrinsicElements['wr-flow'], 'direction'>,
-  ): JSX.Element
-  right(
-    reactProps: Omit<JSX.IntrinsicElements['wr-flow'], 'direction'>,
-  ): JSX.Element
-}
-
-function FlowComponent(reactProps: JSX.IntrinsicElements['wr-flow']) {
-  const {children, ...props} = reactProps
-  return <wr-flow {...props}>{children}</wr-flow>
-}
-
-FlowComponent.down = function FlowLeft(
-  reactProps: Omit<JSX.IntrinsicElements['wr-flow'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return (
-    <wr-flow direction="topToBottom" {...props}>
-      {children}
-    </wr-flow>
-  )
-}
-FlowComponent.up = function FlowLeft(
-  reactProps: Omit<JSX.IntrinsicElements['wr-flow'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return (
-    <wr-flow direction="bottomToTop" {...props}>
-      {children}
-    </wr-flow>
-  )
-}
-FlowComponent.right = function FlowLeft(
-  reactProps: Omit<JSX.IntrinsicElements['wr-flow'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return (
-    <wr-flow direction="leftToRight" {...props}>
-      {children}
-    </wr-flow>
-  )
-}
-FlowComponent.left = function FlowLeft(
-  reactProps: Omit<JSX.IntrinsicElements['wr-flow'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return (
-    <wr-flow direction="rightToLeft" {...props}>
-      {children}
-    </wr-flow>
-  )
-}
-
 export const Flex = FlexComponent as Flex
-export const Flow = FlowComponent as Flow

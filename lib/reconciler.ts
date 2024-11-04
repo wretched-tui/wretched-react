@@ -8,16 +8,15 @@ import {
   Collapsible,
   Container,
   Flex,
-  Flow,
   Input,
   Screen,
-  Text,
   View,
   Window,
 } from 'wretched'
+import {TextContainer, TextLiteral, TextProvider} from './components/TextReact'
 
 import {isSame} from './isSame'
-import {childToText, childrenToText} from './childToText'
+import {childrenToText} from './childToText'
 import {ConsoleLog} from 'wretched'
 import {Digits} from 'wretched'
 
@@ -27,9 +26,89 @@ interface HostContext {
   window: Window
 }
 
+let _d = false
+export function debug() {
+  _d = true
+}
+
 export function render(screen: Screen, window: Window, rootNode: ReactNode) {
   function rerender() {
     screen.render()
+  }
+
+  function removeFromTextContainer(container: Container, child: TextLiteral) {
+    if (_d) {
+      console.log('=========== removeFromTextContainer:41 ===========')
+      console.log({container, child})
+    }
+    // find TextContainer with child in it, and remove
+    for (const node of container.children) {
+      if (node instanceof TextContainer && node.children.includes(child)) {
+        node.removeChild(child)
+        if (node.children.length === 0) {
+          container.removeChild(node)
+        }
+        return
+      }
+    }
+  }
+
+  function removeChild(container: Container, child: View) {
+    if (_d) {
+      console.log('=========== removeChild:58 ===========')
+      console.log({container, child})
+    }
+    if (child instanceof TextLiteral) {
+      removeFromTextContainer(container, child)
+      return
+    }
+
+    container.removeChild(child)
+  }
+
+  function appendChild(parentInstance: Container, child: View, before?: View) {
+    if (child instanceof TextLiteral) {
+      // if last child of parentInstance is TextContainer, use it, otherwise create new one
+      const lastChild = parentInstance.children.at(-1)
+      let textContainer: TextContainer
+      if (lastChild instanceof TextContainer) {
+        textContainer = lastChild
+        if (_d) {
+          console.log('=========== appendChild:77 ===========')
+        }
+      } else {
+        textContainer = new TextContainer()
+        parentInstance.add(textContainer)
+      }
+
+      textContainer.add(child)
+      if (_d) {
+        console.log('=========== appendChild:86 ===========')
+        console.log({parentInstance, textContainer, child})
+      }
+      return
+    }
+
+    let index: number | undefined = before
+      ? parentInstance.children.indexOf(before)
+      : -1
+    if (index === -1) {
+      index = undefined
+    }
+
+    if (_d) {
+      console.log('=========== appendChild:100 ===========')
+      console.log({parentInstance, child, index})
+    }
+    parentInstance.add(child, index)
+    if (_d) {
+      console.log('=========== reconciler.ts at line 105 ===========')
+      console.log({
+        children: parentInstance.children,
+        length: parentInstance.children.length,
+        root: screen.rootView,
+      })
+    }
   }
 
   const reconciler = ReactReconciler({
@@ -60,37 +139,40 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       _hostContext: HostContext,
       _internalInstanceHandle: Object,
     ) {
+      if (_d) {
+        console.log('=========== createInstance:143 ===========')
+        console.log({type, props})
+      }
       if ('children' in props) {
+        const {children, ...remainder} = props
         if (type === 'wr-text') {
-          const text = childrenToText(props.children as any[])
+          const text = childrenToText(children as any[])
           props = {
-            ...props,
+            ...remainder,
             text,
           }
         } else {
-          props = {...props}
+          props = remainder
         }
-
-        delete (props as any)['children']
       }
 
       if ('child' in props) {
+        const {child, ...remainder} = props
         if (type === 'wr-text') {
-          const text = childrenToText([props.child as any])
+          const text = childrenToText([child as any])
           props = {
-            ...props,
+            ...remainder,
             text,
           }
         } else {
-          props = {...props}
+          props = remainder
         }
-
-        delete (props as any)['child']
       }
 
       switch (type) {
+        case 'br':
         case 'wr-br':
-          return new Text({text: '\n'})
+          return new TextLiteral('\n')
         case 'wr-box':
           return new Box(props as any)
         case 'wr-checkbox':
@@ -101,8 +183,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
           return new ConsoleLog(props as any)
         case 'wr-digits':
           return new Digits(props as any)
-        case 'wr-flow':
-          return new Flow(props as any)
         case 'wr-flex':
           return new Flex(props as any)
         case 'wr-input':
@@ -110,44 +190,54 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
         case 'wr-button':
           return new Button(props as any)
         case 'wr-text':
-          return new Text(props as any)
+          return new TextProvider(props as any)
 
         default:
           throw new Error(`unknown component "${type}"`)
       }
     },
     createTextInstance(text: string) {
-      return new Text({text})
+      if (_d) {
+        console.log('=========== createTextInstance:201 ===========')
+        console.log({text})
+      }
+      return new TextLiteral(text)
     },
 
     appendInitialChild(parentInstance: Container, child: View) {
-      parentInstance.add(child)
+      appendChild(parentInstance, child, undefined)
     },
     appendChild(parentInstance: Container, child: View) {
-      parentInstance.add(child)
+      appendChild(parentInstance, child, undefined)
     },
     insertBefore(parentInstance: Container, child: View, beforeChild: View) {
       const index = parentInstance.children.indexOf(beforeChild)
       parentInstance.add(child, index === -1 ? undefined : index)
+      appendChild(parentInstance, child, beforeChild)
     },
 
     appendChildToContainer(rootWindow: Window, child: View) {
-      rootWindow.add(child)
+      if (_d) {
+        console.log('=========== appendChildToContainer:221 ===========')
+      }
+      appendChild(rootWindow, child)
     },
     insertInContainerBefore(
       rootWindow: Window,
       child: View,
       beforeChild: View,
     ) {
-      const index = rootWindow.children.indexOf(beforeChild)
-      rootWindow.add(child, index === -1 ? undefined : index)
+      if (_d) {
+        console.log('=========== insertInContainerBefore:231 ===========')
+      }
+      appendChild(rootWindow, child, beforeChild)
     },
 
-    removeChild(_: Container, child: View) {
-      child.removeFromParent()
+    removeChild(container: Container, child: View) {
+      removeChild(container, child)
     },
-    removeChildFromContainer(_rootWindow: Window, child: View) {
-      child.removeFromParent()
+    removeChildFromContainer(container: Window, child: View) {
+      removeChild(container, child)
     },
     detachDeletedInstance(node: View) {},
 
@@ -170,15 +260,27 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       // not needed as long as finalizeInitialChildren returns `false`
     },
 
-    commitTextUpdate(textInstance: Text, _oldText: string, newText: string) {
+    commitTextUpdate(
+      textInstance: TextLiteral,
+      _oldText: string,
+      newText: string,
+    ) {
+      if (_d) {
+        console.log('=========== reconciler.ts at line 269 ===========')
+        console.log({view: textInstance, newText})
+      }
       textInstance.text = newText
     },
 
-    resetTextContent(instance: Text) {
+    resetTextContent(instance: TextLiteral) {
       instance.text = ''
     },
     shouldSetTextContent(type: string, _props: Props) {
-      return type === 'wr-text'
+      if (_d) {
+        console.log('=========== reconciler.ts at line 280 ===========')
+        console.log({type})
+      }
+      return false
     },
 
     prepareUpdate(
@@ -223,7 +325,7 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       _internalInstanceHandle: Object,
     ) {
       const {children, ...updates} = newProps as any
-      if (children !== undefined && node instanceof Text) {
+      if (children !== undefined && node instanceof TextLiteral) {
         updates.text = childrenToText(children)
       }
 
@@ -276,17 +378,21 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
     null,
   )
 
-  const parentComponent = null
-  const callback = null
-  reconciler.updateContainer(rootNode, fiber, parentComponent, callback)
+  reconciler.updateContainer(
+    rootNode,
+    fiber,
+    null /* parentComponent */,
+    null /* callback */,
+  )
   return reconciler.getPublicRootInstance(fiber)
 }
 
 export async function run(
   component: ReactNode,
 ): Promise<[Screen, Window, React.ReactNode]> {
-  const start = await Screen.start()
-  const [screen, _, window] = start
+  const window = new Window()
+  const start = await Screen.start(window)
+  const [screen, _] = start
 
   render(screen, window, component)
 

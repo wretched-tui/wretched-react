@@ -4,19 +4,18 @@ import {
   Br,
   Box,
   Button,
-  Digits,
   Checkbox,
   Flex,
-  Flow,
   Input,
   Text,
+  Digits,
 } from 'wretched-react'
-import {run} from 'wretched-react'
+import {run, debug as reconcilerDebug} from 'wretched-react'
 import {Border} from 'wretched'
 
 const borders: Border[] = ['double', 'bold', 'dotted', 'rounded']
 
-export function Test() {
+function Demo() {
   const [height, setHeight] = useState(10)
   const [hello, leave] = useReducer(
     state => (state === 'hello' ? 'goodbye' : 'hello'),
@@ -31,43 +30,39 @@ export function Test() {
 
   return (
     <Box border="double" debug={debug}>
-      <Flow direction="topToBottom">
-        <Flow direction="leftToRight" spaceBetween={1}>
+      <Flex direction="down" gap={1}>
+        <Flex direction="right" gap={1}>
           <Button text="-" onClick={() => setHeight(height => height - 1)} />
           <Button text="+" onClick={() => setHeight(height => height + 1)} />
-          <Checkbox text="debug" onCheck={toggleDebug} isChecked={debug} />
-        </Flow>
+          <Checkbox text="debug" onChange={toggleDebug} isChecked={debug} />
+        </Flex>
         <Digits text={String(height)} />
         <Box height={height} border={border}>
-          <Text>
-            {hello}!{'\n'}
-            world @ {height}
-          </Text>
+          {hello}!<br />
+          world @ {height}
         </Box>
-        <Flow direction="topToBottom" spaceBetween={1}>
-          <Input text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur molestie faucibus. Phasellus iaculis pellentesque felis eu fringilla. Ut in sollicitudin nisi. Praesent in mauris tortor. Nam interdum, magna eu pellentesque scelerisque, dui ipsum adipiscing ante, vel ullamcorper nisl sapien id arcu. Nullam egestas diam eu felis mollis sit amet cursus enim vehicula. Quisque eu tellus id erat pellentesque consequat. Maecenas fermentum faucibus magna, eget dictum nisi congue sed. Quisque a justo a nisi eleifend facilisis sit amet at augue. Sed a sapien vitae augue hendrerit porta vel eu ligula. Proin enim urna, faucibus in vestibulum tincidunt, commodo sit amet orci. Vestibulum ac sem urna, quis mattis urna. Nam eget ullamcorper ligula. Nam volutpat, arcu vel auctor dignissim, tortor nisi sodales enim, et vestibulum nulla dui id ligula. Nam ullamcorper, augue ut interdum vulputate, eros mauris lobortis sapien, ac sodales dui eros ac elit." />
-          <Text>
-            {hello}
-            <Br />
-            world
-          </Text>
-          <Text>
-            {hello}!{'\n'}
-            world
-          </Text>
-          <Button text="Leave" onClick={leave} />
-          <Button text="Border" onClick={switchBorder} />
-          <Button text={showExtra ? 'Hide' : 'Show'} onClick={toggleExtra} />
-        </Flow>
+        <Input text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur molestie faucibus. Phasellus iaculis pellentesque felis eu fringilla. Ut in sollicitudin nisi. Praesent in mauris tortor. Nam interdum, magna eu pellentesque scelerisque, dui ipsum adipiscing ante, vel ullamcorper nisl sapien id arcu. Nullam egestas diam eu felis mollis sit amet cursus enim vehicula. Quisque eu tellus id erat pellentesque consequat. Maecenas fermentum faucibus magna, eget dictum nisi congue sed. Quisque a justo a nisi eleifend facilisis sit amet at augue. Sed a sapien vitae augue hendrerit porta vel eu ligula. Proin enim urna, faucibus in vestibulum tincidunt, commodo sit amet orci. Vestibulum ac sem urna, quis mattis urna. Nam eget ullamcorper ligula. Nam volutpat, arcu vel auctor dignissim, tortor nisi sodales enim, et vestibulum nulla dui id ligula. Nam ullamcorper, augue ut interdum vulputate, eros mauris lobortis sapien, ac sodales dui eros ac elit." />
+        <Text>
+          {hello}
+          <Br />
+          world
+        </Text>
+        <Text>
+          {hello}!{'\n'}
+          world
+        </Text>
+        <Button text="Leave" onClick={leave} />
+        <Button text="Border" onClick={switchBorder} />
+        <Button text={showExtra ? 'Hide' : 'Show'} onClick={toggleExtra} />
         {showExtra ? (
           <Box height={3} border={border}>
             😀
           </Box>
         ) : null}
-      </Flow>
+      </Flex>
     </Box>
   )
 }
 
 interceptConsoleLog()
-run(<Test />)
+run(<Demo />)
