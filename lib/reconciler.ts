@@ -13,10 +13,14 @@ import {
   View,
   Window,
 } from 'wretched'
-import {TextContainer, TextLiteral, TextProvider} from './components/TextReact'
+import {
+  TextContainer,
+  TextLiteral,
+  TextProvider,
+  TextStyle,
+} from './components/TextReact'
 
 import {isSame} from './isSame'
-import {childrenToText} from './childToText'
 import {ConsoleLog} from 'wretched'
 import {Digits} from 'wretched'
 
@@ -26,21 +30,12 @@ interface HostContext {
   window: Window
 }
 
-let _d = false
-export function debug() {
-  _d = true
-}
-
 export function render(screen: Screen, window: Window, rootNode: ReactNode) {
   function rerender() {
     screen.render()
   }
 
-  function removeFromTextContainer(container: Container, child: TextLiteral) {
-    if (_d) {
-      console.log('=========== removeFromTextContainer:41 ===========')
-      console.log({container, child})
-    }
+  function removeFromTextContainer(container: Container, child: View) {
     // find TextContainer with child in it, and remove
     for (const node of container.children) {
       if (node instanceof TextContainer && node.children.includes(child)) {
@@ -54,38 +49,31 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
   }
 
   function removeChild(container: Container, child: View) {
-    if (_d) {
-      console.log('=========== removeChild:58 ===========')
-      console.log({container, child})
-    }
-    if (child instanceof TextLiteral) {
+    if (child.parent === container) {
+      container.removeChild(child)
+    } else if (child instanceof TextLiteral || child instanceof TextStyle) {
       removeFromTextContainer(container, child)
-      return
     }
-
-    container.removeChild(child)
   }
 
   function appendChild(parentInstance: Container, child: View, before?: View) {
-    if (child instanceof TextLiteral) {
+    if (
+      parentInstance instanceof TextStyle &&
+      (child instanceof TextLiteral || child instanceof TextStyle)
+    ) {
+      // do not do the TextContainer song and dance
+    } else if (child instanceof TextLiteral || child instanceof TextStyle) {
       // if last child of parentInstance is TextContainer, use it, otherwise create new one
       const lastChild = parentInstance.children.at(-1)
       let textContainer: TextContainer
       if (lastChild instanceof TextContainer) {
         textContainer = lastChild
-        if (_d) {
-          console.log('=========== appendChild:77 ===========')
-        }
       } else {
         textContainer = new TextContainer()
         parentInstance.add(textContainer)
       }
 
       textContainer.add(child)
-      if (_d) {
-        console.log('=========== appendChild:86 ===========')
-        console.log({parentInstance, textContainer, child})
-      }
       return
     }
 
@@ -96,19 +84,7 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       index = undefined
     }
 
-    if (_d) {
-      console.log('=========== appendChild:100 ===========')
-      console.log({parentInstance, child, index})
-    }
     parentInstance.add(child, index)
-    if (_d) {
-      console.log('=========== reconciler.ts at line 105 ===========')
-      console.log({
-        children: parentInstance.children,
-        length: parentInstance.children.length,
-        root: screen.rootView,
-      })
-    }
   }
 
   const reconciler = ReactReconciler({
@@ -139,34 +115,14 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       _hostContext: HostContext,
       _internalInstanceHandle: Object,
     ) {
-      if (_d) {
-        console.log('=========== createInstance:143 ===========')
-        console.log({type, props})
-      }
       if ('children' in props) {
         const {children, ...remainder} = props
-        if (type === 'wr-text') {
-          const text = childrenToText(children as any[])
-          props = {
-            ...remainder,
-            text,
-          }
-        } else {
-          props = remainder
-        }
+        props = remainder
       }
 
       if ('child' in props) {
         const {child, ...remainder} = props
-        if (type === 'wr-text') {
-          const text = childrenToText([child as any])
-          props = {
-            ...remainder,
-            text,
-          }
-        } else {
-          props = remainder
-        }
+        props = remainder
       }
 
       switch (type) {
@@ -189,6 +145,8 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
           return new Input(props as any)
         case 'wr-button':
           return new Button(props as any)
+        case 'wr-style':
+          return new TextStyle(props as any)
         case 'wr-text':
           return new TextProvider(props as any)
 
@@ -197,10 +155,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       }
     },
     createTextInstance(text: string) {
-      if (_d) {
-        console.log('=========== createTextInstance:201 ===========')
-        console.log({text})
-      }
       return new TextLiteral(text)
     },
 
@@ -217,9 +171,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
     },
 
     appendChildToContainer(rootWindow: Window, child: View) {
-      if (_d) {
-        console.log('=========== appendChildToContainer:221 ===========')
-      }
       appendChild(rootWindow, child)
     },
     insertInContainerBefore(
@@ -227,9 +178,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       child: View,
       beforeChild: View,
     ) {
-      if (_d) {
-        console.log('=========== insertInContainerBefore:231 ===========')
-      }
       appendChild(rootWindow, child, beforeChild)
     },
 
@@ -265,10 +213,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       _oldText: string,
       newText: string,
     ) {
-      if (_d) {
-        console.log('=========== reconciler.ts at line 269 ===========')
-        console.log({view: textInstance, newText})
-      }
       textInstance.text = newText
     },
 
@@ -276,10 +220,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       instance.text = ''
     },
     shouldSetTextContent(type: string, _props: Props) {
-      if (_d) {
-        console.log('=========== reconciler.ts at line 280 ===========')
-        console.log({type})
-      }
       return false
     },
 
@@ -325,9 +265,9 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       _internalInstanceHandle: Object,
     ) {
       const {children, ...updates} = newProps as any
-      if (children !== undefined && node instanceof TextLiteral) {
-        updates.text = childrenToText(children)
-      }
+      // if (children !== undefined && node instanceof TextLiteral) {
+      //   updates.text = childrenToText(children)
+      // }
 
       node.update(updates)
     },

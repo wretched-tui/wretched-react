@@ -1,6 +1,7 @@
 import {
   Viewport,
   View,
+  Screen,
   type ViewProps,
   Container,
   Style,
@@ -69,25 +70,63 @@ const DEFAULTS = {
  */
 export class TextLiteral extends View {
   #text: string
-  parentTextContainer?: TextContainer
 
   constructor(text: string) {
     super({})
     this.#text = text
+    define(this, 'text', {enumerable: true})
   }
 
-  get text(): string | number {
+  styledText(): string {
+    let style: Style | undefined
+    let prevStyle = Style.NONE
+    for (
+      let ancestorView: Container | undefined = this.parent;
+      Boolean(ancestorView);
+      ancestorView = ancestorView && ancestorView.parent
+    ) {
+      if (ancestorView instanceof TextStyle) {
+        style = ancestorView.style
+        prevStyle = ancestorView.parentStyle
+        break
+      }
+
+      if (ancestorView instanceof TextContainer) {
+        break
+      }
+    }
+
+    if (style) {
+      return style.toSGR(prevStyle, this.#text)
+    }
+
     return this.#text
   }
 
-  set text(value: string | number) {
+  get text() {
+    return this.#text
+  }
+
+  set text(value: string) {
     this.#text = String(value)
     this.#invalidateTextContainer()
     this.invalidateSize()
   }
 
   #invalidateTextContainer() {
-    this.parentTextContainer?.invalidateText()
+    let textContainer: TextContainer | undefined
+    for (
+      let ancestorView: Container | undefined = this.parent;
+      Boolean(ancestorView);
+      ancestorView = ancestorView && ancestorView.parent
+    ) {
+      if (ancestorView instanceof TextContainer) {
+        textContainer = ancestorView
+        break
+      }
+    }
+
+    textContainer?.invalidateText()
   }
 
   naturalSize() {
@@ -97,8 +136,6 @@ export class TextLiteral extends View {
   render() {}
 }
 
-interface TextProps {}
-
 /**
  * Subsequent TextLiteral nodes are grouped into a TextContainer, which handles the
  * layout of child nodes. It gets its style, font, and alignment from the nearest
@@ -106,24 +143,30 @@ interface TextProps {}
  */
 export class TextContainer extends Container {
   #nodes: View[] = []
-  #needResolution = false
 
   constructor() {
     super({})
   }
 
+  get nodes() {
+    return this.#nodes
+  }
+
   add(child: View, at?: number) {
     if (child instanceof TextLiteral) {
-      child.parentTextContainer = this
+      child.parent = this
     }
 
     this.#nodes.splice(at ?? this.#nodes.length, 0, child)
-    this.#invalidateNodes()
+
+    if (this.screen) {
+      this.#invalidateNodes()
+    }
   }
 
   removeChild(remove: View | number) {
     if (remove instanceof TextLiteral) {
-      remove.parentTextContainer = undefined
+      remove.parent = undefined
     }
 
     if (typeof remove === 'number') {
@@ -138,113 +181,88 @@ export class TextContainer extends Container {
       }
     }
 
-    this.#invalidateNodes()
+    if (this.screen) {
+      this.#invalidateNodes()
+    }
   }
 
   removeAllChildren() {
     for (const child of this.#nodes) {
       if (child instanceof TextLiteral) {
-        child.parentTextContainer = undefined
+        child.parent = undefined
       }
     }
 
     this.#nodes.splice(0, this.#nodes.length)
+    if (this.screen) {
+      this.#invalidateNodes()
+    }
+  }
+
+  didMount(screen: Screen) {
+    super.didMount(screen)
     this.#invalidateNodes()
   }
 
   invalidateText() {
-    let textBuffer: string | undefined
-    const STOP = null
     let childIndex = 0
-    for (const node of [...this.#nodes, STOP]) {
-      const child = this.children.at(childIndex)
+    for (const nextChild of this.#nodesToChildren()) {
+      const childView = this.children.at(childIndex)
 
-      if (node instanceof TextLiteral) {
-        textBuffer ??= ''
-        textBuffer += node.text
+      if (nextChild instanceof View) {
+        childIndex += 1
       } else {
-        if (textBuffer !== undefined) {
-          if (!(child instanceof Text)) {
-            this.#invalidateNodes()
-            return
-          }
-
-          child.text = textBuffer
+        if (!(childView instanceof Text)) {
+          this.#invalidateNodes()
+          return
         }
 
-        childIndex += 1
+        childView.text = nextChild
       }
     }
   }
 
   #invalidateNodes() {
-    this.#needResolution = true
-    this.#resolveNodes()
-  }
-
-  #resolveNodes() {
-    if (!this.#needResolution) {
-      return
-    }
-
     // ideally, we would not remove/add views that are in children and this.#nodes,
     // but in reality that turns out to be tedious, and it's hardly any trouble to
     // remove and re-add those views.
     super.removeAllChildren()
 
+    for (const child of this.#nodesToChildren()) {
+      if (child instanceof View) {
+        super.add(child)
+      } else {
+        const textView = this.#createTextNode(child)
+        super.add(textView)
+      }
+    }
+  }
+
+  #nodesToChildren(): (string | View)[] {
+    const children: (string | View)[] = []
     let textBuffer: string | undefined
     const STOP = null
-    for (const node of [...this.#nodes, STOP]) {
+    const flattenedNodes = this.#flatten(this.#nodes)
+    for (const node of [...flattenedNodes, STOP]) {
       if (node instanceof TextLiteral) {
         textBuffer ??= ''
-        textBuffer += node.text
+        textBuffer += node.styledText()
       } else {
         if (textBuffer !== undefined) {
-          const textView = this.#createTextNode(textBuffer)
-          super.add(textView)
+          children.push(textBuffer)
           textBuffer = undefined
         }
 
         if (node) {
-          super.add(node)
+          children.push(node)
         }
       }
     }
 
-    this.#needResolution = false
-  }
-
-  #createTextNode(text: string) {
-    let textProvider: TextProvider | undefined
-    for (
-      let ancestorView = this.parent;
-      Boolean(ancestorView);
-      ancestorView = ancestorView && ancestorView.parent
-    ) {
-      if (ancestorView instanceof TextProvider) {
-        textProvider = ancestorView
-        break
-      }
-    }
-
-    let textProps: TextProviderProps = {
-      font: 'default',
-      alignment: 'left',
-      wrap: false,
-    }
-    if (textProvider) {
-      textProps = {...textProps, ...textProvider.textProps}
-    }
-
-    return new Text({
-      text,
-      ...textProps,
-    })
+    return children
   }
 
   naturalSize(available: Size): Size {
-    this.#resolveNodes()
-
     const size = Size.zero.mutableCopy()
     const remaining = available.mutableCopy()
     for (const child of this.children) {
@@ -270,22 +288,75 @@ export class TextContainer extends Container {
       y += childSize.height
     }
   }
+
+  #createTextNode(text: string) {
+    let textProvider: TextProvider | undefined
+    for (
+      let ancestorView = this.parent;
+      Boolean(ancestorView);
+      ancestorView = ancestorView && ancestorView.parent
+    ) {
+      if (ancestorView instanceof TextProvider) {
+        textProvider = ancestorView
+        break
+      }
+    }
+
+    let textProps: TextProps = {
+      font: 'default',
+      alignment: 'left',
+      wrap: false,
+    }
+    if (textProvider) {
+      textProps = {...textProps, ...textProvider.textProps}
+    }
+
+    return new Text({
+      text,
+      ...textProps,
+    })
+  }
+
+  #flatten(nodes: View[]): View[] {
+    return nodes.flatMap(node => {
+      if (node instanceof TextContainer) {
+        return this.#flatten(node.nodes)
+      }
+
+      if (node instanceof TextStyle) {
+        return this.#flatten(node.children)
+      }
+
+      return [node]
+    })
+  }
 }
 
 interface TextProviderProps {
-  style?: Style
+  style?: Partial<Style>
   font?: FontFamily
   alignment?: Alignment
   wrap?: boolean
 }
 
-type ProviderProps = Partial<TextProviderProps> & ViewProps
+type TextProps = Omit<TextProviderProps, 'style'> & {
+  style?: Style
+}
 
+type ProviderProps = TextProviderProps & ViewProps & Partial<Style>
+
+/**
+ * Intended to contain a single TextContainer. Provides the styling that is used to
+ * create Text views.
+ *
+ * @example
+ *     <Text align='left' bold>text</Text>
+ */
 export class TextProvider extends Container {
-  #style: TextProviderProps['style']
+  #style: Style = Style.NONE
+  #font: TextProviderProps['font']
   #alignment: TextProviderProps['alignment']
   #wrap: TextProviderProps['wrap']
-  #font: TextProviderProps['font']
 
   declare wrap: FontFamily
   declare font: FontFamily
@@ -297,17 +368,56 @@ export class TextProvider extends Container {
     this.#update(props)
   }
 
-  get textProps(): TextProviderProps {
-    const retVal: TextProviderProps = {}
-    if (this.#style !== undefined) {
-      retVal.style = this.#style
+  get style() {
+    return this.parentStyle.merge(this.#style)
+  }
+
+  get parentStyle() {
+    let parentStyle: Style | undefined
+    for (
+      let ancestorView = this.parent;
+      Boolean(ancestorView);
+      ancestorView = ancestorView && ancestorView.parent
+    ) {
+      if (ancestorView instanceof TextProvider) {
+        parentStyle = ancestorView.style
+        break
+      }
     }
+
+    return parentStyle ?? Style.NONE
+  }
+
+  get textProps(): TextProps {
+    let parentProvider: TextProvider | undefined
+    for (
+      let ancestorView = this.parent;
+      Boolean(ancestorView);
+      ancestorView = ancestorView && ancestorView.parent
+    ) {
+      if (ancestorView instanceof TextProvider) {
+        parentProvider = ancestorView
+        break
+      }
+    }
+
+    let retVal: TextProps = {}
+    if (parentProvider) {
+      retVal = {...parentProvider.textProps}
+    } else {
+      retVal = {}
+    }
+
+    retVal.style = this.#style
+
     if (this.#alignment !== undefined) {
       retVal.alignment = this.#alignment
     }
+
     if (this.#wrap !== undefined) {
       retVal.wrap = this.#wrap
     }
+
     if (this.#font !== undefined) {
       retVal.font = this.#font
     }
@@ -320,10 +430,72 @@ export class TextProvider extends Container {
     super.update(props)
   }
 
-  #update({style, alignment, wrap, font}: ProviderProps) {
+  #update(props: ProviderProps) {
+    const {style, alignment, wrap, font, ...styleProps} = props
+    this.#style = new Style(styleProps).merge(style)
     this.#font = font
-    this.#style = style
     this.#alignment = alignment ?? 'left'
     this.#wrap = wrap ?? false
+    ;(['wrap', 'alignment', 'font'] as const).forEach(prop => {
+      define(this, prop, {
+        get: () => props[prop],
+        enumerable: props.hasOwnProperty(prop),
+      })
+    })
+    ;(
+      [
+        'bold',
+        'dim',
+        'italic',
+        'strikeout',
+        'underline',
+        'inverse',
+        'blink',
+        'invisible',
+        'foreground',
+        'background',
+      ] as const
+    ).forEach(prop => {
+      Object.defineProperty(this, prop, {
+        get: () => this.#style?.[prop],
+        enumerable: this.#style?.[prop] !== undefined,
+      })
+    })
+  }
+}
+
+function define<T extends object>(
+  object: T,
+  property: keyof T,
+  attributes: PropertyDescriptor,
+) {
+  let kls = object.constructor
+  do {
+    const descriptor = Object.getOwnPropertyDescriptor(kls.prototype, property)
+    if (descriptor) {
+      const modified_descriptor = Object.assign(descriptor, attributes)
+      Object.defineProperty(object, property, modified_descriptor)
+      return
+    } else {
+      kls = Object.getPrototypeOf(kls)
+    }
+  } while (kls && kls.prototype && kls !== Object.prototype)
+}
+
+type StyledTextProps = Omit<ProviderProps, 'alignment' | 'wrap' | 'font'>
+
+/**
+ * Provides inline styles - doesn't support wrap or alignment.
+ *
+ * Also doesn't support 'font' because that's not encoded as an SGR code - but
+ * ideally it would be supported.
+ */
+export class TextStyle extends TextProvider {
+  constructor(props: StyledTextProps) {
+    super(props)
+  }
+
+  get styledText() {
+    return ''
   }
 }

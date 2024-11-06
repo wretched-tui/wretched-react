@@ -17,9 +17,9 @@ import type {
   Separator as WrSeparator,
   Slider as WrSlider,
   Space as WrSpace,
-  Text as WrText,
   // Tree,
 } from 'wretched'
+import {TextProvider, TextStyle} from './components/TextReact'
 
 type WretchedView<
   T extends abstract new (arg: any, ...args: any) => any,
@@ -30,9 +30,6 @@ type WretchedContainer<
   T extends abstract new (arg: any, ...args: any) => any,
   Children extends keyof NonNullable<ConstructorParameters<T>[0]> = 'children',
 > = WretchedView<T, Children> & {[Key in Children]?: React.ReactNode}
-
-type WretchedText<T extends abstract new (arg: any, ...args: any) => any> =
-  Omit<WretchedView<T>, 'text'> & {children?: React.ReactNode}
 
 declare global {
   namespace JSX {
@@ -49,7 +46,8 @@ declare global {
       'wr-console': WretchedView<typeof WrConsoleLog>
       'wr-flex': WretchedContainer<typeof WrFlex>
       'wr-input': WretchedContainer<typeof WrInput>
-      'wr-text': WretchedText<typeof WrText>
+      'wr-text': WretchedContainer<typeof TextProvider>
+      'wr-style': WretchedContainer<typeof TextStyle>
     }
   }
 }
@@ -103,6 +101,17 @@ export function Text(
   reactProps: JSX.IntrinsicElements['wr-text'],
 ): JSX.Element {
   return <wr-text {...reactProps} />
+}
+/**
+ * <Style /> is similar to <Text/> but only allows inline styles (bold, etc).
+ * Does not support align or wrap (block styles). Does not support 'font', because
+ * font is not encodable via SGR codes (and that's how I'm styling and
+ * concatenating the text nodes).
+ */
+export function Style(
+  reactProps: JSX.IntrinsicElements['wr-style'],
+): JSX.Element {
+  return <wr-style {...reactProps} />
 }
 export function Br(): JSX.Element {
   return <wr-br />

@@ -1,16 +1,13 @@
-import React, {useReducer, useState} from 'react'
+import React, {useState} from 'react'
 import {interceptConsoleLog} from 'wretched'
 import {
-  Br,
   Box,
   Button,
-  Checkbox,
   Flex,
-  Input,
   Text,
-  Digits,
-  debug as reconcilerDebug,
+  Style,
   run,
+  debug as reconcilerDebug,
 } from 'wretched-react'
 
 export function Test() {
@@ -27,6 +24,24 @@ export function Test() {
         <Button text="-" onClick={() => setHeight(height - 1)} />
         <Button text="+" onClick={() => setHeight(height + 1)} />
       </Flex>
+      <Box height={height} border="single">
+        <Style bold>
+          {hello}
+          <Style dim>!</Style>
+          woah
+        </Style>
+        {'\n'}
+        world @ {height}
+        <br />
+        👍
+      </Box>
+    </Flex.down>
+  )
+}
+
+function MoreTests({hello, height}: {hello: string; height: number}) {
+  return (
+    <>
       <Box height={height} border="single">
         <Text alignment="left" font="fraktur">
           {/* Each line creates a TextLiteral */}
@@ -67,13 +82,7 @@ export function Test() {
           👍
         </Text>
       </Box>
-      <Box height={height} border="single">
-        {hello}!{'\n'}
-        world @ {height}
-        <br />
-        👍
-      </Box>
-    </Flex.down>
+    </>
   )
 }
 
