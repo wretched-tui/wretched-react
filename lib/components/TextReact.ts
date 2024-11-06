@@ -163,38 +163,18 @@ export class TextContainer extends Container {
     }
   }
 
-  removeChild(remove: View | number) {
-    if (remove instanceof TextLiteral) {
-      remove.parent = undefined
+  removeChild(child: View) {
+    if (child instanceof TextLiteral) {
+      child.parent = undefined
     }
 
-    if (typeof remove === 'number') {
-      if (remove >= 0 && remove < this.#nodes.length) {
-        const child = this.#nodes[remove]
-        this.#nodes.splice(remove, 1)
+    const index = this.#nodes.indexOf(child)
+    if (~index && index >= 0 && index < this.#nodes.length) {
+      this.#nodes.splice(index, 1)
+
+      if (this.screen) {
+        this.#invalidateNodes()
       }
-    } else {
-      const index = this.#nodes.indexOf(remove)
-      if (~index) {
-        this.removeChild(index)
-      }
-    }
-
-    if (this.screen) {
-      this.#invalidateNodes()
-    }
-  }
-
-  removeAllChildren() {
-    for (const child of this.#nodes) {
-      if (child instanceof TextLiteral) {
-        child.parent = undefined
-      }
-    }
-
-    this.#nodes.splice(0, this.#nodes.length)
-    if (this.screen) {
-      this.#invalidateNodes()
     }
   }
 
