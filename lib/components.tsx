@@ -47,6 +47,10 @@ declare global {
       'wr-flex': WretchedContainer<typeof WrFlex>
       'wr-input': WretchedContainer<typeof WrInput>
       'wr-text': WretchedContainer<typeof TextProvider>
+      'wr-space': WretchedContainer<typeof WrSpace>
+      'wr-scrollable': WretchedContainer<typeof WrScrollable>
+      'wr-separator': WretchedContainer<typeof WrSeparator>
+      'wr-slider': WretchedContainer<typeof WrSlider>
       'wr-style': WretchedContainer<typeof TextStyle>
     }
   }
@@ -55,6 +59,61 @@ declare global {
 export function Box(reactProps: JSX.IntrinsicElements['wr-box']): JSX.Element {
   const {children, ...props} = reactProps
   return <wr-box {...props}>{children}</wr-box>
+}
+export function Scrollable(
+  reactProps: JSX.IntrinsicElements['wr-scrollable'],
+): JSX.Element {
+  const {children, ...props} = reactProps
+  return <wr-scrollable {...props}>{children}</wr-scrollable>
+}
+export function Space(
+  reactProps: JSX.IntrinsicElements['wr-space'],
+): JSX.Element {
+  return <wr-space {...reactProps} />
+}
+
+interface Separator {
+  (reactProps: JSX.IntrinsicElements['wr-separator']): JSX.Element
+  horizontal(
+    reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
+  ): JSX.Element
+  vertical(
+    reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
+  ): JSX.Element
+}
+
+function SeparatorComponent(
+  reactProps: JSX.IntrinsicElements['wr-separator'],
+): JSX.Element {
+  return <wr-separator {...reactProps} />
+}
+SeparatorComponent.horizontal = function SliderHorizontal(
+  reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
+) {
+  const {children, ...props} = reactProps
+  return (
+    <wr-separator direction="horizontal" {...props}>
+      {children}
+    </wr-separator>
+  )
+}
+SeparatorComponent.vertical = function SliderHorizontal(
+  reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
+) {
+  const {children, ...props} = reactProps
+  return (
+    <wr-separator direction="vertical" {...props}>
+      {children}
+    </wr-separator>
+  )
+}
+
+export const Separator = SeparatorComponent as Separator
+
+export function Slider(
+  reactProps: JSX.IntrinsicElements['wr-slider'],
+): JSX.Element {
+  return <wr-slider {...reactProps} />
 }
 
 export function Button(

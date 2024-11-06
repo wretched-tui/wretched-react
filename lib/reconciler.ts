@@ -10,6 +10,10 @@ import {
   Flex,
   Input,
   Screen,
+  Scrollable,
+  Separator,
+  Slider,
+  Space,
   View,
   Window,
 } from 'wretched'
@@ -145,8 +149,16 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
           return new Input(props as any)
         case 'wr-button':
           return new Button(props as any)
+        case 'wr-scrollable':
+          return new Scrollable(props as any)
+        case 'wr-separator':
+          return new Separator(props as any)
+        case 'wr-slider':
+          return new Slider(props as any)
         case 'wr-style':
           return new TextStyle(props as any)
+        case 'wr-space':
+          return new Space(props as any)
         case 'wr-text':
           return new TextProvider(props as any)
 
