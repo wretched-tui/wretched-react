@@ -1,15 +1,16 @@
 import {
-  Viewport,
-  View,
-  Screen,
-  type ViewProps,
+  Alignment,
   Container,
+  define,
+  FontFamily,
+  Rect,
+  Screen,
+  Size,
   Style,
   Text,
-  Size,
-  Rect,
-  Alignment,
-  FontFamily,
+  type ViewProps,
+  View,
+  Viewport,
 } from 'wretched'
 
 /**
@@ -79,7 +80,6 @@ export class TextLiteral extends View {
 
   styledText(): string {
     let style: Style | undefined
-    let prevStyle = Style.NONE
     for (
       let ancestorView: Container | undefined = this.parent;
       Boolean(ancestorView);
@@ -87,7 +87,6 @@ export class TextLiteral extends View {
     ) {
       if (ancestorView instanceof TextStyle) {
         style = ancestorView.style
-        prevStyle = ancestorView.parentStyle
         break
       }
 
@@ -97,7 +96,7 @@ export class TextLiteral extends View {
     }
 
     if (style) {
-      return style.toSGR(prevStyle, this.#text)
+      return style.toSGR(Style.NONE, this.#text)
     }
 
     return this.#text
@@ -302,11 +301,7 @@ export class TextContainer extends Container {
       }
     }
 
-    let textProps: TextProps = {
-      font: 'default',
-      alignment: 'left',
-      wrap: false,
-    }
+    let textProps: TextProps = DEFAULTS
     if (textProvider) {
       textProps = {...textProps, ...textProvider.textProps}
     }
@@ -436,50 +431,7 @@ export class TextProvider extends Container {
     this.#font = font
     this.#alignment = alignment ?? 'left'
     this.#wrap = wrap ?? false
-    ;(['wrap', 'alignment', 'font'] as const).forEach(prop => {
-      define(this, prop, {
-        get: () => props[prop],
-        enumerable: props.hasOwnProperty(prop),
-      })
-    })
-    ;(
-      [
-        'bold',
-        'dim',
-        'italic',
-        'strikeout',
-        'underline',
-        'inverse',
-        'blink',
-        'invisible',
-        'foreground',
-        'background',
-      ] as const
-    ).forEach(prop => {
-      Object.defineProperty(this, prop, {
-        get: () => this.#style?.[prop],
-        enumerable: this.#style?.[prop] !== undefined,
-      })
-    })
   }
-}
-
-function define<T extends object>(
-  object: T,
-  property: keyof T,
-  attributes: PropertyDescriptor,
-) {
-  let kls = object.constructor
-  do {
-    const descriptor = Object.getOwnPropertyDescriptor(kls.prototype, property)
-    if (descriptor) {
-      const modified_descriptor = Object.assign(descriptor, attributes)
-      Object.defineProperty(object, property, modified_descriptor)
-      return
-    } else {
-      kls = Object.getPrototypeOf(kls)
-    }
-  } while (kls && kls.prototype && kls !== Object.prototype)
 }
 
 type StyledTextProps = Omit<ProviderProps, 'alignment' | 'wrap' | 'font'>
@@ -493,9 +445,5 @@ type StyledTextProps = Omit<ProviderProps, 'alignment' | 'wrap' | 'font'>
 export class TextStyle extends TextProvider {
   constructor(props: StyledTextProps) {
     super(props)
-  }
-
-  get styledText() {
-    return ''
   }
 }
