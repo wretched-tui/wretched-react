@@ -16,6 +16,7 @@ import {
   Space,
   Style,
   Text,
+  Tabs,
 } from 'wretched-react'
 import {run} from 'wretched-react'
 import {Border} from 'wretched'
@@ -37,7 +38,7 @@ function Demo() {
 
   const setHeight = (height: number) => {
     if (debug) {
-      console.log({height})
+      console.debug({height})
     }
     setHeight_(height)
   }
@@ -81,23 +82,28 @@ function Demo() {
           />
         </Flex>
         <Digits text={String(height)} />
-        <Box height={height} border={border}>
-          <Style bold foreground="blue">
-            {hello}{' '}
-            <Style italic foreground="green">
-              world
+        <Tabs border>
+          <Tabs.Section title="Text Example">
+            <Style bold foreground="blue">
+              {hello}{' '}
+              <Style italic foreground="green">
+                world
+              </Style>
+              , I hope you are doing well,{' '}
+              <Style italic>
+                all things <Style underline>considered</Style>
+              </Style>
             </Style>
-            , I hope you are doing well,{' '}
-            <Style italic>
-              all things <Style underline>considered</Style>
-            </Style>
-          </Style>
-          <br />
-          world @ {height}
-          <Br />
-          👍{'\n'}
-          👋
-        </Box>
+            <br />
+            world @ {height}
+            <Br />
+            👍{'\n'}
+            👋
+          </Tabs.Section>
+          <Tabs.Section title="Another Example">
+            I don't have one yet.
+          </Tabs.Section>
+        </Tabs>
         <Input text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur molestie faucibus. Phasellus iaculis pellentesque felis eu fringilla. Ut in sollicitudin nisi. Praesent in mauris tortor. Nam interdum, magna eu pellentesque scelerisque, dui ipsum adipiscing ante, vel ullamcorper nisl sapien id arcu. Nullam egestas diam eu felis mollis sit amet cursus enim vehicula. Quisque eu tellus id erat pellentesque consequat. Maecenas fermentum faucibus magna, eget dictum nisi congue sed. Quisque a justo a nisi eleifend facilisis sit amet at augue. Sed a sapien vitae augue hendrerit porta vel eu ligula. Proin enim urna, faucibus in vestibulum tincidunt, commodo sit amet orci. Vestibulum ac sem urna, quis mattis urna. Nam eget ullamcorper ligula. Nam volutpat, arcu vel auctor dignissim, tortor nisi sodales enim, et vestibulum nulla dui id ligula. Nam ullamcorper, augue ut interdum vulputate, eros mauris lobortis sapien, ac sodales dui eros ac elit." />
         <Button text={hello === 'hello' ? 'Leave' : 'Enter'} onClick={leave} />
         <Flex.right>
@@ -107,11 +113,55 @@ function Demo() {
         </Flex.right>
         <Button text={showExtra ? 'Hide' : 'Show'} onClick={toggleExtra} />
         {showExtra ? (
-          <Collapsible
-            isCollapsed
-            collapsed={<Text italic>HI</Text>}
-            expanded={<Text bold>bye</Text>}
-          />
+          <Scrollable height={3}>
+            <Flex.down>
+              <Collapsible
+                isCollapsed
+                collapsed={<Text italic>HI (1)</Text>}
+                expanded={<Text bold>bye (1)</Text>}
+              />
+              <Collapsible
+                isCollapsed
+                collapsed={<Text italic>HI (2)</Text>}
+                expanded={<Text bold>bye (2)</Text>}
+              />
+              <Collapsible
+                isCollapsed
+                collapsed={<Text italic>HI (3)</Text>}
+                expanded={<Text bold>bye (3)</Text>}
+              />
+              <Collapsible
+                isCollapsed
+                collapsed={<Text italic>HI (4)</Text>}
+                expanded={<Text bold>bye (4)</Text>}
+              />
+              <Collapsible
+                isCollapsed
+                collapsed={<Text italic>HI (5)</Text>}
+                expanded={<Text bold>bye (5)</Text>}
+              />
+              <Collapsible
+                isCollapsed
+                collapsed={<Text italic>HI (6)</Text>}
+                expanded={<Text bold>bye (6)</Text>}
+              />
+              <Collapsible
+                isCollapsed
+                collapsed={<Text italic>HI (7)</Text>}
+                expanded={<Text bold>bye (7)</Text>}
+              />
+              <Collapsible
+                isCollapsed
+                collapsed={<Text italic>HI (8)</Text>}
+                expanded={<Text bold>bye (8)</Text>}
+              />
+              <Collapsible
+                isCollapsed
+                collapsed={<Text italic>HI (9)</Text>}
+                expanded={<Text bold>bye (9)</Text>}
+              />
+            </Flex.down>
+          </Scrollable>
         ) : null}
         {debug ? <ConsoleLog /> : null}
       </Flex>

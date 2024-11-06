@@ -18,6 +18,7 @@ import type {
   Slider as WrSlider,
   Space as WrSpace,
   // Tree,
+  Tabs as WrTabs,
 } from 'wretched'
 import {TextProvider, TextStyle} from './components/TextReact'
 
@@ -34,26 +35,113 @@ type WretchedContainer<
 declare global {
   namespace JSX {
     interface IntrinsicElements {
+      // views
+      'wr-br': {}
+      'wr-checkbox': WretchedView<typeof WrCheckbox>
+      'wr-console': WretchedView<typeof WrConsoleLog>
+      'wr-digits': WretchedView<typeof WrDigits>
+      'wr-input': WretchedView<typeof WrInput>
+      'wr-separator': WretchedView<typeof WrSeparator>
+      'wr-slider': WretchedView<typeof WrSlider>
+      'wr-space': WretchedView<typeof WrSpace>
+
+      // "simple" containers
       'wr-box': WretchedContainer<typeof WrBox>
       'wr-button': WretchedContainer<typeof WrButton>
-      'wr-br': {}
-      'wr-digits': WretchedView<typeof WrDigits>
-      'wr-checkbox': WretchedContainer<typeof WrCheckbox>
       'wr-collapsible': WretchedContainer<
         typeof WrCollapsible,
         'collapsed' | 'expanded' | 'children'
       >
-      'wr-console': WretchedView<typeof WrConsoleLog>
       'wr-flex': WretchedContainer<typeof WrFlex>
-      'wr-input': WretchedContainer<typeof WrInput>
-      'wr-text': WretchedContainer<typeof TextProvider>
-      'wr-space': WretchedContainer<typeof WrSpace>
       'wr-scrollable': WretchedContainer<typeof WrScrollable>
-      'wr-separator': WretchedContainer<typeof WrSeparator>
-      'wr-slider': WretchedContainer<typeof WrSlider>
       'wr-style': WretchedContainer<typeof TextStyle>
+      'wr-text': WretchedContainer<typeof TextProvider>
+
+      // "complex" containers
+      'wr-tabs': WretchedContainer<typeof WrTabs>
+      'wr-tab': WretchedContainer<typeof WrTabs.Section>
     }
   }
+}
+
+export function Br(): JSX.Element {
+  return <wr-br />
+}
+export function Checkbox(
+  reactProps: JSX.IntrinsicElements['wr-checkbox'],
+): JSX.Element {
+  return <wr-checkbox {...reactProps} />
+}
+export function ConsoleLog(
+  reactProps: JSX.IntrinsicElements['wr-console'],
+): JSX.Element {
+  return <wr-console {...reactProps} />
+}
+export function Digits(
+  reactProps: JSX.IntrinsicElements['wr-digits'],
+): JSX.Element {
+  return <wr-digits {...reactProps} />
+}
+export function Input(
+  reactProps: JSX.IntrinsicElements['wr-input'],
+): JSX.Element {
+  return <wr-input {...reactProps} />
+}
+
+interface Separator {
+  (reactProps: JSX.IntrinsicElements['wr-separator']): JSX.Element
+  horizontal(
+    reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
+  ): JSX.Element
+  vertical(
+    reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
+  ): JSX.Element
+}
+export const Separator: Separator = function Separator(
+  reactProps: JSX.IntrinsicElements['wr-separator'],
+): JSX.Element {
+  return <wr-separator {...reactProps} />
+}
+Separator.horizontal = function SeparatorHorizontal(
+  reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
+) {
+  return <wr-separator direction="horizontal" {...reactProps} />
+}
+Separator.vertical = function SeparatorHorizontal(
+  reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
+) {
+  return <wr-separator direction="vertical" {...reactProps} />
+}
+
+interface Slider {
+  (reactProps: JSX.IntrinsicElements['wr-slider']): JSX.Element
+  horizontal(
+    reactProps: Omit<JSX.IntrinsicElements['wr-slider'], 'direction'>,
+  ): JSX.Element
+  vertical(
+    reactProps: Omit<JSX.IntrinsicElements['wr-slider'], 'direction'>,
+  ): JSX.Element
+}
+export const Slider: Slider = function Slider(
+  reactProps: JSX.IntrinsicElements['wr-slider'],
+): JSX.Element {
+  return <wr-slider {...reactProps} />
+}
+Slider.horizontal = function SliderHorizontal(
+  reactProps: Omit<JSX.IntrinsicElements['wr-slider'], 'direction'>,
+) {
+  return <wr-slider direction="horizontal" {...reactProps} />
+}
+Slider.vertical = function SliderHorizontal(
+  reactProps: Omit<JSX.IntrinsicElements['wr-slider'], 'direction'>,
+) {
+  return <wr-slider direction="vertical" {...reactProps} />
+}
+
+export function Space(
+  reactProps: JSX.IntrinsicElements['wr-space'],
+): JSX.Element {
+  return <wr-space {...reactProps} />
 }
 
 export function Box(reactProps: JSX.IntrinsicElements['wr-box']): JSX.Element {
@@ -66,54 +154,24 @@ export function Scrollable(
   const {children, ...props} = reactProps
   return <wr-scrollable {...props}>{children}</wr-scrollable>
 }
-export function Space(
-  reactProps: JSX.IntrinsicElements['wr-space'],
-): JSX.Element {
-  return <wr-space {...reactProps} />
-}
 
-interface Separator {
-  (reactProps: JSX.IntrinsicElements['wr-separator']): JSX.Element
-  horizontal(
-    reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
-  ): JSX.Element
-  vertical(
-    reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
+interface Tabs {
+  (reactProps: JSX.IntrinsicElements['wr-tabs']): JSX.Element
+  Section(
+    reactProps: Omit<JSX.IntrinsicElements['wr-tab'], 'direction'>,
   ): JSX.Element
 }
-
-function SeparatorComponent(
-  reactProps: JSX.IntrinsicElements['wr-separator'],
+export const Tabs: Tabs = function Tabs(
+  reactProps: JSX.IntrinsicElements['wr-tabs'],
 ): JSX.Element {
-  return <wr-separator {...reactProps} />
+  const {children, ...props} = reactProps
+  return <wr-tabs {...props}>{children}</wr-tabs>
 }
-SeparatorComponent.horizontal = function SliderHorizontal(
-  reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
+Tabs.Section = function SliderHorizontal(
+  reactProps: Omit<JSX.IntrinsicElements['wr-tab'], 'direction'>,
 ) {
   const {children, ...props} = reactProps
-  return (
-    <wr-separator direction="horizontal" {...props}>
-      {children}
-    </wr-separator>
-  )
-}
-SeparatorComponent.vertical = function SliderHorizontal(
-  reactProps: Omit<JSX.IntrinsicElements['wr-separator'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return (
-    <wr-separator direction="vertical" {...props}>
-      {children}
-    </wr-separator>
-  )
-}
-
-export const Separator = SeparatorComponent as Separator
-
-export function Slider(
-  reactProps: JSX.IntrinsicElements['wr-slider'],
-): JSX.Element {
-  return <wr-slider {...reactProps} />
+  return <wr-tab {...props}>{children}</wr-tab>
 }
 
 export function Button(
@@ -121,23 +179,6 @@ export function Button(
 ): JSX.Element {
   const {children, ...props} = reactProps
   return <wr-button {...props}>{children}</wr-button>
-}
-export function Checkbox(
-  reactProps: JSX.IntrinsicElements['wr-checkbox'],
-): JSX.Element {
-  const {children, ...props} = reactProps
-  return <wr-checkbox {...props}>{children}</wr-checkbox>
-}
-
-export function Input(
-  reactProps: JSX.IntrinsicElements['wr-input'],
-): JSX.Element {
-  return <wr-input {...reactProps} />
-}
-export function Digits(
-  reactProps: JSX.IntrinsicElements['wr-digits'],
-): JSX.Element {
-  return <wr-digits {...reactProps} />
 }
 
 export function Collapsible(
@@ -172,15 +213,6 @@ export function Style(
 ): JSX.Element {
   return <wr-style {...reactProps} />
 }
-export function Br(): JSX.Element {
-  return <wr-br />
-}
-
-export function ConsoleLog(
-  reactProps: JSX.IntrinsicElements['wr-console'],
-): JSX.Element {
-  return <wr-console {...reactProps} />
-}
 
 interface Flex {
   (reactProps: JSX.IntrinsicElements['wr-flex']): JSX.Element
@@ -198,12 +230,14 @@ interface Flex {
   ): JSX.Element
 }
 
-function FlexComponent(reactProps: JSX.IntrinsicElements['wr-flex']) {
+export const Flex: Flex = function Flex(
+  reactProps: JSX.IntrinsicElements['wr-flex'],
+) {
   const {children, ...props} = reactProps
   return <wr-flex {...props}>{children}</wr-flex>
 }
 
-FlexComponent.down = function FlexLeft(
+Flex.down = function FlexLeft(
   reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
 ) {
   const {children, ...props} = reactProps
@@ -213,7 +247,7 @@ FlexComponent.down = function FlexLeft(
     </wr-flex>
   )
 }
-FlexComponent.up = function FlexLeft(
+Flex.up = function FlexLeft(
   reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
 ) {
   const {children, ...props} = reactProps
@@ -223,7 +257,7 @@ FlexComponent.up = function FlexLeft(
     </wr-flex>
   )
 }
-FlexComponent.right = function FlexLeft(
+Flex.right = function FlexLeft(
   reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
 ) {
   const {children, ...props} = reactProps
@@ -233,7 +267,7 @@ FlexComponent.right = function FlexLeft(
     </wr-flex>
   )
 }
-FlexComponent.left = function FlexLeft(
+Flex.left = function FlexLeft(
   reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
 ) {
   const {children, ...props} = reactProps
@@ -243,5 +277,3 @@ FlexComponent.left = function FlexLeft(
     </wr-flex>
   )
 }
-
-export const Flex = FlexComponent as Flex
