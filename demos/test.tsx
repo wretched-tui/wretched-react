@@ -1,21 +1,10 @@
 import React, {useState} from 'react'
 import {interceptConsoleLog} from 'wretched'
-import {
-  Box,
-  Button,
-  Flex,
-  Text,
-  Style,
-  run,
-  debug as reconcilerDebug,
-} from 'wretched-react'
+import {Box, Button, Flex, Text, Style, run} from 'wretched-react'
 
 export function Test() {
   const hello = 'hello'
-  const [height, _setHeight] = useState(10)
-  const setHeight = (height: number) => {
-    _setHeight(height)
-  }
+  const [height, setHeight] = useState(10)
 
   return (
     <Flex.down>
@@ -25,31 +14,17 @@ export function Test() {
         <Button text="+" onClick={() => setHeight(height + 1)} />
       </Flex>
       <Box height={height} border="single">
-        <Style bold>
-          {hello}
-          <Style dim>!</Style>
-          woah
-        </Style>
-        {'\n'}
-        world @ {height}
-        <br />
-        👍
-      </Box>
-    </Flex.down>
-  )
-}
-
-function MoreTests({hello, height}: {hello: string; height: number}) {
-  return (
-    <>
-      <Box height={height} border="single">
         <Text alignment="left" font="fraktur">
-          {/* Each line creates a TextLiteral */}
-          {/* Subsequent TextLiterals are grouped into a TextContainer */}
-          {hello}!<br />
-          world @ {height}
-          <br />
-          👍
+          <Style bold foreground="blue">
+            {hello}{' '}
+            <Style italic foreground="green">
+              world
+            </Style>
+            , I hope you are doing well,{' '}
+            <Style italic>
+              all things <Style underline>considered</Style>
+            </Style>
+          </Style>
         </Text>
       </Box>
       <Box height={height} border="single">
@@ -82,7 +57,18 @@ function MoreTests({hello, height}: {hello: string; height: number}) {
           👍
         </Text>
       </Box>
-    </>
+      <Box height={height} border="single">
+        <Style bold>
+          {hello}
+          <Style dim>!</Style>
+          woah
+        </Style>
+        {'\n'}
+        world @ {height}
+        <br />
+        👍
+      </Box>
+    </Flex.down>
   )
 }
 
