@@ -23,7 +23,7 @@
   },
   "scripts": {
     "prepublishOnly": "yarn clean && yarn tsc && rm -rf dist/demos/",
-    "gittag": "git tag $(node -e 'console.log(require(\"./package\").version)')",
+    "gittag": "git tag $(node -e 'process.stdout.write(require(\"./package\").version)')",
     "clean": "rm -rf dist/",
     "build": "yarn clean && yarn tsc",
     "checksum": ". scripts/check.sh lib",
