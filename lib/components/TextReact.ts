@@ -40,7 +40,7 @@ import {
  * - no `TextProvider` here, so default text styles are used (left align, default
  *   font)
  *
- *     <Text wrap={true}>
+ *     <Text wrap={false}>
  *       {`good news everyone,\n`}
  *       tomorrow you'll be making a delivery to…
  *       <Box height={5} width={5} />
@@ -61,7 +61,7 @@ namespace TextReact {}
 
 const DEFAULTS = {
   alignment: 'left',
-  wrap: false,
+  wrap: true,
   font: 'default',
 } as const
 
@@ -248,7 +248,7 @@ export class TextContainer extends Container {
       const childSize = child.naturalSize(remaining)
       size.width = Math.max(size.width, childSize.width)
       size.height += childSize.height
-      remaining.height -= childSize.height
+      remaining.height = Math.max(0, remaining.height - childSize.height)
     }
 
     return size

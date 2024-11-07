@@ -2,6 +2,7 @@ import React from 'react'
 import type {ReactNode} from 'react'
 import ReactReconciler from 'react-reconciler'
 import {
+  Accordion,
   Box,
   Button,
   Checkbox,
@@ -194,8 +195,12 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
         // "complex" containers
         case 'wr-tabs':
           return new Tabs(props as any)
-        case 'wr-tab':
+        case 'wr-tabs-section':
           return new Tabs.Section(props as any)
+        case 'wr-accordion':
+          return new Accordion(props as any)
+        case 'wr-accordion-section':
+          return new Accordion.Section(props as any)
 
         default:
           throw new Error(`unknown component "${type}"`)

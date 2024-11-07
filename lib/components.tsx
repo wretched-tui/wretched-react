@@ -1,5 +1,6 @@
 import React from 'react'
 import type {
+  Accordion as WrAccordion,
   Box as WrBox,
   Button as WrButton,
   Checkbox as WrCheckbox,
@@ -58,11 +59,17 @@ declare global {
       'wr-text': WretchedContainer<typeof TextProvider>
 
       // "complex" containers
+      'wr-accordion': WretchedContainer<typeof WrAccordion>
+      'wr-accordion-section': WretchedContainer<typeof WrAccordion.Section>
       'wr-tabs': WretchedContainer<typeof WrTabs>
-      'wr-tab': WretchedContainer<typeof WrTabs.Section>
+      'wr-tabs-section': WretchedContainer<typeof WrTabs.Section>
     }
   }
 }
+
+////
+/// Views
+//
 
 export function Br(): JSX.Element {
   return <wr-br />
@@ -144,43 +151,20 @@ export function Space(
   return <wr-space {...reactProps} />
 }
 
+////
+/// "Simple" containers
+//
+
 export function Box(reactProps: JSX.IntrinsicElements['wr-box']): JSX.Element {
   const {children, ...props} = reactProps
   return <wr-box {...props}>{children}</wr-box>
 }
-export function Scrollable(
-  reactProps: JSX.IntrinsicElements['wr-scrollable'],
-): JSX.Element {
-  const {children, ...props} = reactProps
-  return <wr-scrollable {...props}>{children}</wr-scrollable>
-}
-
-interface Tabs {
-  (reactProps: JSX.IntrinsicElements['wr-tabs']): JSX.Element
-  Section(
-    reactProps: Omit<JSX.IntrinsicElements['wr-tab'], 'direction'>,
-  ): JSX.Element
-}
-export const Tabs: Tabs = function Tabs(
-  reactProps: JSX.IntrinsicElements['wr-tabs'],
-): JSX.Element {
-  const {children, ...props} = reactProps
-  return <wr-tabs {...props}>{children}</wr-tabs>
-}
-Tabs.Section = function SliderHorizontal(
-  reactProps: Omit<JSX.IntrinsicElements['wr-tab'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return <wr-tab {...props}>{children}</wr-tab>
-}
-
 export function Button(
   reactProps: JSX.IntrinsicElements['wr-button'],
 ): JSX.Element {
   const {children, ...props} = reactProps
   return <wr-button {...props}>{children}</wr-button>
 }
-
 export function Collapsible(
   reactProps: JSX.IntrinsicElements['wr-collapsible'],
 ): JSX.Element {
@@ -191,16 +175,6 @@ export function Collapsible(
       {expanded}
     </wr-collapsible>
   )
-}
-
-/**
- * <Text /> is a container that sets the text properties of child TextLiterals
- * (font, style) and TextContainers (wrap, alignment)
- */
-export function Text(
-  reactProps: JSX.IntrinsicElements['wr-text'],
-): JSX.Element {
-  return <wr-text {...reactProps} />
 }
 
 interface Stack {
@@ -224,7 +198,6 @@ export const Stack: Stack = function Stack(
   const {children, ...props} = reactProps
   return <wr-stack {...props}>{children}</wr-stack>
 }
-
 Stack.down = function StackLeft(
   reactProps: Omit<JSX.IntrinsicElements['wr-stack'], 'direction'>,
 ) {
@@ -265,7 +238,12 @@ Stack.left = function StackLeft(
     </wr-stack>
   )
 }
-
+export function Scrollable(
+  reactProps: JSX.IntrinsicElements['wr-scrollable'],
+): JSX.Element {
+  const {children, ...props} = reactProps
+  return <wr-scrollable {...props}>{children}</wr-scrollable>
+}
 /**
  * <Style /> is similar to <Text/> but only allows inline styles (bold, etc).
  * Does not support align or wrap (block styles). Does not support 'font', because
@@ -276,4 +254,58 @@ export function Style(
   reactProps: JSX.IntrinsicElements['wr-style'],
 ): JSX.Element {
   return <wr-style {...reactProps} />
+}
+/**
+ * <Text /> is a container that sets the text properties of child TextLiterals
+ * (font, style) and TextContainers (wrap, alignment)
+ */
+export function Text(
+  reactProps: JSX.IntrinsicElements['wr-text'],
+): JSX.Element {
+  return <wr-text {...reactProps} />
+}
+
+////
+/// "Complex" containers
+//
+
+interface Tabs {
+  (reactProps: JSX.IntrinsicElements['wr-tabs']): JSX.Element
+  Section(
+    reactProps: Omit<JSX.IntrinsicElements['wr-tabs-section'], 'direction'>,
+  ): JSX.Element
+}
+export const Tabs: Tabs = function Tabs(
+  reactProps: JSX.IntrinsicElements['wr-tabs'],
+): JSX.Element {
+  const {children, ...props} = reactProps
+  return <wr-tabs {...props}>{children}</wr-tabs>
+}
+Tabs.Section = function SliderHorizontal(
+  reactProps: Omit<JSX.IntrinsicElements['wr-tabs-section'], 'direction'>,
+) {
+  const {children, ...props} = reactProps
+  return <wr-tabs-section {...props}>{children}</wr-tabs-section>
+}
+
+interface Accordion {
+  (reactProps: JSX.IntrinsicElements['wr-accordion']): JSX.Element
+  Section(
+    reactProps: Omit<
+      JSX.IntrinsicElements['wr-accordion-section'],
+      'direction'
+    >,
+  ): JSX.Element
+}
+export const Accordion: Accordion = function Accordion(
+  reactProps: JSX.IntrinsicElements['wr-accordion'],
+): JSX.Element {
+  const {children, ...props} = reactProps
+  return <wr-accordion {...props}>{children}</wr-accordion>
+}
+Accordion.Section = function SliderHorizontal(
+  reactProps: Omit<JSX.IntrinsicElements['wr-accordion-section'], 'direction'>,
+) {
+  const {children, ...props} = reactProps
+  return <wr-accordion-section {...props}>{children}</wr-accordion-section>
 }
