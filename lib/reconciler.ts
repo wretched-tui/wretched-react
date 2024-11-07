@@ -7,7 +7,7 @@ import {
   Checkbox,
   Collapsible,
   Container,
-  Flex,
+  Stack,
   Input,
   Screen,
   Scrollable,
@@ -182,8 +182,8 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
           return new Button(props as any)
         case 'wr-collapsible':
           return new Collapsible(props as any)
-        case 'wr-flex':
-          return new Flex(props as any)
+        case 'wr-stack':
+          return new Stack(props as any)
         case 'wr-scrollable':
           return new Scrollable(props as any)
         case 'wr-style':

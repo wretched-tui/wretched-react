@@ -9,7 +9,7 @@ import type {
   Digits as WrDigits,
   // Drawer,
   // Dropdown,
-  Flex as WrFlex,
+  Stack as WrStack,
   Input as WrInput,
   // Log,
   // ScrollableList,
@@ -52,8 +52,8 @@ declare global {
         typeof WrCollapsible,
         'collapsed' | 'expanded' | 'children'
       >
-      'wr-flex': WretchedContainer<typeof WrFlex>
       'wr-scrollable': WretchedContainer<typeof WrScrollable>
+      'wr-stack': WretchedContainer<typeof WrStack>
       'wr-style': WretchedContainer<typeof TextStyle>
       'wr-text': WretchedContainer<typeof TextProvider>
 
@@ -202,6 +202,70 @@ export function Text(
 ): JSX.Element {
   return <wr-text {...reactProps} />
 }
+
+interface Stack {
+  (reactProps: JSX.IntrinsicElements['wr-stack']): JSX.Element
+  down(
+    reactProps: Omit<JSX.IntrinsicElements['wr-stack'], 'direction'>,
+  ): JSX.Element
+  up(
+    reactProps: Omit<JSX.IntrinsicElements['wr-stack'], 'direction'>,
+  ): JSX.Element
+  left(
+    reactProps: Omit<JSX.IntrinsicElements['wr-stack'], 'direction'>,
+  ): JSX.Element
+  right(
+    reactProps: Omit<JSX.IntrinsicElements['wr-stack'], 'direction'>,
+  ): JSX.Element
+}
+export const Stack: Stack = function Stack(
+  reactProps: JSX.IntrinsicElements['wr-stack'],
+) {
+  const {children, ...props} = reactProps
+  return <wr-stack {...props}>{children}</wr-stack>
+}
+
+Stack.down = function StackLeft(
+  reactProps: Omit<JSX.IntrinsicElements['wr-stack'], 'direction'>,
+) {
+  const {children, ...props} = reactProps
+  return (
+    <wr-stack direction="down" {...props}>
+      {children}
+    </wr-stack>
+  )
+}
+Stack.up = function StackLeft(
+  reactProps: Omit<JSX.IntrinsicElements['wr-stack'], 'direction'>,
+) {
+  const {children, ...props} = reactProps
+  return (
+    <wr-stack direction="up" {...props}>
+      {children}
+    </wr-stack>
+  )
+}
+Stack.right = function StackLeft(
+  reactProps: Omit<JSX.IntrinsicElements['wr-stack'], 'direction'>,
+) {
+  const {children, ...props} = reactProps
+  return (
+    <wr-stack direction="right" {...props}>
+      {children}
+    </wr-stack>
+  )
+}
+Stack.left = function StackLeft(
+  reactProps: Omit<JSX.IntrinsicElements['wr-stack'], 'direction'>,
+) {
+  const {children, ...props} = reactProps
+  return (
+    <wr-stack direction="left" {...props}>
+      {children}
+    </wr-stack>
+  )
+}
+
 /**
  * <Style /> is similar to <Text/> but only allows inline styles (bold, etc).
  * Does not support align or wrap (block styles). Does not support 'font', because
@@ -212,68 +276,4 @@ export function Style(
   reactProps: JSX.IntrinsicElements['wr-style'],
 ): JSX.Element {
   return <wr-style {...reactProps} />
-}
-
-interface Flex {
-  (reactProps: JSX.IntrinsicElements['wr-flex']): JSX.Element
-  down(
-    reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
-  ): JSX.Element
-  up(
-    reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
-  ): JSX.Element
-  left(
-    reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
-  ): JSX.Element
-  right(
-    reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
-  ): JSX.Element
-}
-
-export const Flex: Flex = function Flex(
-  reactProps: JSX.IntrinsicElements['wr-flex'],
-) {
-  const {children, ...props} = reactProps
-  return <wr-flex {...props}>{children}</wr-flex>
-}
-
-Flex.down = function FlexLeft(
-  reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return (
-    <wr-flex direction="down" {...props}>
-      {children}
-    </wr-flex>
-  )
-}
-Flex.up = function FlexLeft(
-  reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return (
-    <wr-flex direction="up" {...props}>
-      {children}
-    </wr-flex>
-  )
-}
-Flex.right = function FlexLeft(
-  reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return (
-    <wr-flex direction="right" {...props}>
-      {children}
-    </wr-flex>
-  )
-}
-Flex.left = function FlexLeft(
-  reactProps: Omit<JSX.IntrinsicElements['wr-flex'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return (
-    <wr-flex direction="left" {...props}>
-      {children}
-    </wr-flex>
-  )
 }

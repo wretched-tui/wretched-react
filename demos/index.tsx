@@ -8,7 +8,7 @@ import {
   Collapsible,
   ConsoleLog,
   Digits,
-  Flex,
+  Stack,
   Input,
   Scrollable,
   Separator,
@@ -45,8 +45,8 @@ function Demo() {
 
   return (
     <Box border="double" debug={debug}>
-      <Flex direction="down" gap={1}>
-        <Flex.right fill>
+      <Stack direction="down" gap={1}>
+        <Stack.right fill>
           <Space width={1} />
           <Slider
             direction="horizontal"
@@ -69,9 +69,9 @@ function Demo() {
             onChange={setHeight}
           />
           <Space width={1} />
-        </Flex.right>
+        </Stack.right>
         <Separator.horizontal />
-        <Flex direction="right" gap={1}>
+        <Stack direction="right" gap={1}>
           <Button text="-" onClick={() => setHeight(height - 1)} />
           <Button text="+" onClick={() => setHeight(height + 1)} />
           <Checkbox
@@ -80,7 +80,7 @@ function Demo() {
             value={debug}
             hotKey="C-d"
           />
-        </Flex>
+        </Stack>
         <Digits text={String(height)} />
         <Tabs border>
           <Tabs.Section title="Text Example">
@@ -106,15 +106,15 @@ function Demo() {
         </Tabs>
         <Input text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur molestie faucibus. Phasellus iaculis pellentesque felis eu fringilla. Ut in sollicitudin nisi. Praesent in mauris tortor. Nam interdum, magna eu pellentesque scelerisque, dui ipsum adipiscing ante, vel ullamcorper nisl sapien id arcu. Nullam egestas diam eu felis mollis sit amet cursus enim vehicula. Quisque eu tellus id erat pellentesque consequat. Maecenas fermentum faucibus magna, eget dictum nisi congue sed. Quisque a justo a nisi eleifend facilisis sit amet at augue. Sed a sapien vitae augue hendrerit porta vel eu ligula. Proin enim urna, faucibus in vestibulum tincidunt, commodo sit amet orci. Vestibulum ac sem urna, quis mattis urna. Nam eget ullamcorper ligula. Nam volutpat, arcu vel auctor dignissim, tortor nisi sodales enim, et vestibulum nulla dui id ligula. Nam ullamcorper, augue ut interdum vulputate, eros mauris lobortis sapien, ac sodales dui eros ac elit." />
         <Button text={hello === 'hello' ? 'Leave' : 'Enter'} onClick={leave} />
-        <Flex.right>
+        <Stack.right>
           <Space flex={1} />
           <Button flex={3} text="Border" onClick={switchBorder} />
           <Space flex={1} />
-        </Flex.right>
+        </Stack.right>
         <Button text={showExtra ? 'Hide' : 'Show'} onClick={toggleExtra} />
         {showExtra ? (
           <Scrollable height={3}>
-            <Flex.down>
+            <Stack.down>
               <Collapsible
                 isCollapsed
                 collapsed={<Text italic>HI (1)</Text>}
@@ -160,11 +160,11 @@ function Demo() {
                 collapsed={<Text italic>HI (9)</Text>}
                 expanded={<Text bold>bye (9)</Text>}
               />
-            </Flex.down>
+            </Stack.down>
           </Scrollable>
         ) : null}
         {debug ? <ConsoleLog /> : null}
-      </Flex>
+      </Stack>
     </Box>
   )
 }

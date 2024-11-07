@@ -1,18 +1,18 @@
 import React, {useState} from 'react'
 import {interceptConsoleLog} from 'wretched'
-import {Box, Button, Flex, Text, Style, run} from 'wretched-react'
+import {Box, Button, Stack, Text, Style, run} from 'wretched-react'
 
 export function Test() {
   const hello = 'hello'
   const [height, setHeight] = useState(10)
 
   return (
-    <Flex.down>
-      <Flex direction="right" gap={1}>
+    <Stack.down>
+      <Stack direction="right" gap={1}>
         <Box height={1} width={20} />
         <Button text="-" onClick={() => setHeight(height - 1)} />
         <Button text="+" onClick={() => setHeight(height + 1)} />
-      </Flex>
+      </Stack>
       <Box height={height} border="single">
         <Text alignment="left" font="fraktur">
           <Style bold foreground="blue">
@@ -68,7 +68,7 @@ export function Test() {
         <br />
         👍
       </Box>
-    </Flex.down>
+    </Stack.down>
   )
 }
 
