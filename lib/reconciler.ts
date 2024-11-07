@@ -9,13 +9,14 @@ import {
   Collapsible,
   CollapsibleText,
   Container,
-  Stack,
+  Drawer,
   Input,
   Screen,
   Scrollable,
   Separator,
   Slider,
   Space,
+  Stack,
   Tabs,
   View,
   Window,
@@ -196,14 +197,16 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
           return new TextProvider(props as any)
 
         // "complex" containers
-        case 'wr-tabs':
-          return new Tabs(props as any)
-        case 'wr-tabs-section':
-          return new Tabs.Section(props as any)
         case 'wr-accordion':
           return new Accordion(props as any)
         case 'wr-accordion-section':
           return new Accordion.Section(props as any)
+        case 'wr-drawer':
+          return new Drawer(props as any)
+        case 'wr-tabs':
+          return new Tabs(props as any)
+        case 'wr-tabs-section':
+          return new Tabs.Section(props as any)
 
         default:
           throw new Error(`unknown component "${type}"`)

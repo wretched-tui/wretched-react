@@ -8,7 +8,7 @@ import type {
   CollapsibleText as WrCollapsibleText,
   ConsoleLog as WrConsoleLog,
   Digits as WrDigits,
-  // Drawer,
+  Drawer as WrDrawer,
   // Dropdown,
   Stack as WrStack,
   Input as WrInput,
@@ -62,6 +62,10 @@ declare global {
       // "complex" containers
       'wr-accordion': WretchedContainer<typeof WrAccordion>
       'wr-accordion-section': WretchedContainer<typeof WrAccordion.Section>
+      'wr-drawer': WretchedContainer<
+        typeof WrDrawer,
+        'content' | 'drawer' | 'children'
+      >
       'wr-tabs': WretchedContainer<typeof WrTabs>
       'wr-tabs-section': WretchedContainer<typeof WrTabs.Section>
     }
@@ -275,25 +279,6 @@ export function Text(
 /// "Complex" containers
 //
 
-interface Tabs {
-  (reactProps: JSX.IntrinsicElements['wr-tabs']): JSX.Element
-  Section(
-    reactProps: Omit<JSX.IntrinsicElements['wr-tabs-section'], 'direction'>,
-  ): JSX.Element
-}
-export const Tabs: Tabs = function Tabs(
-  reactProps: JSX.IntrinsicElements['wr-tabs'],
-): JSX.Element {
-  const {children, ...props} = reactProps
-  return <wr-tabs {...props}>{children}</wr-tabs>
-}
-Tabs.Section = function SliderHorizontal(
-  reactProps: Omit<JSX.IntrinsicElements['wr-tabs-section'], 'direction'>,
-) {
-  const {children, ...props} = reactProps
-  return <wr-tabs-section {...props}>{children}</wr-tabs-section>
-}
-
 interface Accordion {
   (reactProps: JSX.IntrinsicElements['wr-accordion']): JSX.Element
   Section(
@@ -314,4 +299,95 @@ Accordion.Section = function SliderHorizontal(
 ) {
   const {children, ...props} = reactProps
   return <wr-accordion-section {...props}>{children}</wr-accordion-section>
+}
+
+interface Drawer {
+  (reactProps: JSX.IntrinsicElements['wr-drawer']): JSX.Element
+  top(
+    reactProps: Omit<JSX.IntrinsicElements['wr-drawer'], 'location'>,
+  ): JSX.Element
+  right(
+    reactProps: Omit<JSX.IntrinsicElements['wr-drawer'], 'location'>,
+  ): JSX.Element
+  bottom(
+    reactProps: Omit<JSX.IntrinsicElements['wr-drawer'], 'location'>,
+  ): JSX.Element
+  left(
+    reactProps: Omit<JSX.IntrinsicElements['wr-drawer'], 'location'>,
+  ): JSX.Element
+}
+export const Drawer: Drawer = function Drawer(
+  reactProps: JSX.IntrinsicElements['wr-drawer'],
+): JSX.Element {
+  const {children, content, drawer, ...props} = reactProps
+  return (
+    <wr-drawer {...props}>
+      {content}
+      {drawer}
+      {children}
+    </wr-drawer>
+  )
+}
+Drawer.top = function DrawerLeft(
+  reactProps: Omit<JSX.IntrinsicElements['wr-drawer'], 'location'>,
+) {
+  const {children, content, drawer, ...props} = reactProps
+  return (
+    <wr-drawer location="top" {...props}>
+      {content}
+      {drawer}
+      {children}
+    </wr-drawer>
+  )
+}
+Drawer.right = function DrawerLeft(
+  reactProps: Omit<JSX.IntrinsicElements['wr-drawer'], 'location'>,
+) {
+  const {children, content, drawer, ...props} = reactProps
+  return (
+    <wr-drawer location="right" {...props}>
+      {content}
+      {drawer}
+      {children}
+    </wr-drawer>
+  )
+}
+Drawer.bottom = function DrawerLeft(
+  reactProps: Omit<JSX.IntrinsicElements['wr-drawer'], 'location'>,
+) {
+  const {children, ...props} = reactProps
+  return (
+    <wr-drawer location="bottom" {...props}>
+      {children}
+    </wr-drawer>
+  )
+}
+Drawer.left = function DrawerLeft(
+  reactProps: Omit<JSX.IntrinsicElements['wr-drawer'], 'location'>,
+) {
+  const {children, ...props} = reactProps
+  return (
+    <wr-drawer location="left" {...props}>
+      {children}
+    </wr-drawer>
+  )
+}
+
+interface Tabs {
+  (reactProps: JSX.IntrinsicElements['wr-tabs']): JSX.Element
+  Section(
+    reactProps: Omit<JSX.IntrinsicElements['wr-tabs-section'], 'direction'>,
+  ): JSX.Element
+}
+export const Tabs: Tabs = function Tabs(
+  reactProps: JSX.IntrinsicElements['wr-tabs'],
+): JSX.Element {
+  const {children, ...props} = reactProps
+  return <wr-tabs {...props}>{children}</wr-tabs>
+}
+Tabs.Section = function SliderHorizontal(
+  reactProps: Omit<JSX.IntrinsicElements['wr-tabs-section'], 'direction'>,
+) {
+  const {children, ...props} = reactProps
+  return <wr-tabs-section {...props}>{children}</wr-tabs-section>
 }
