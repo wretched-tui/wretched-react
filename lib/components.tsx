@@ -25,12 +25,14 @@ import {TextProvider, TextStyle} from './components/TextReact'
 
 type WretchedView<
   T extends abstract new (arg: any, ...args: any) => any,
-  Children extends keyof ConstructorParameters<T>[0] = 'children',
+  Children extends keyof ConstructorParameters<T>[0] = 'children' | 'child',
 > = Omit<NonNullable<ConstructorParameters<T>[0]>, Children>
 
 type WretchedContainer<
   T extends abstract new (arg: any, ...args: any) => any,
-  Children extends keyof NonNullable<ConstructorParameters<T>[0]> = 'children',
+  Children extends keyof NonNullable<ConstructorParameters<T>[0]> =
+    | 'children'
+    | 'child',
 > = WretchedView<T, Children> & {[Key in Children]?: React.ReactNode}
 
 declare global {

@@ -7,19 +7,19 @@ import {
   Button,
   Checkbox,
   Collapsible,
+  CollapsibleText,
   ConsoleLog,
   Digits,
   Drawer,
-  Stack,
   Input,
   Scrollable,
   Separator,
   Slider,
   Space,
+  Stack,
   Style,
-  Text,
   Tabs,
-  CollapsibleText,
+  Text,
 } from 'wretched-react'
 import {run} from 'wretched-react'
 import {Border} from 'wretched'
