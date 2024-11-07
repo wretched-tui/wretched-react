@@ -393,7 +393,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
     null /* parentComponent */,
     null /* callback */,
   )
-  return reconciler.getPublicRootInstance(fiber)
 }
 
 export async function run(
