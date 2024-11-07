@@ -7,6 +7,7 @@ import {
   Button,
   Checkbox,
   Collapsible,
+  CollapsibleText,
   Container,
   Stack,
   Input,
@@ -163,6 +164,8 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
           return new TextLiteral('\n')
         case 'wr-checkbox':
           return new Checkbox(props as any)
+        case 'wr-collapsible-text':
+          return new CollapsibleText(props as any)
         case 'wr-console':
           return new ConsoleLog(props as any)
         case 'wr-digits':

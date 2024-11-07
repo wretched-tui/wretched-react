@@ -18,6 +18,7 @@ import {
   Style,
   Text,
   Tabs,
+  CollapsibleText,
 } from 'wretched-react'
 import {run} from 'wretched-react'
 import {Border} from 'wretched'
@@ -191,20 +192,17 @@ function Demo() {
         <Accordion.Section title="A">Yup, this is section A</Accordion.Section>
         <Accordion.Section title="B">You get the idea</Accordion.Section>
         <Accordion.Section title="C" width="shrink">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-          consectetur molestie faucibus. Phasellus iaculis pellentesque felis eu
-          fringilla. Ut in sollicitudin nisi. Praesent in mauris tortor. Nam
-          interdum, magna eu pellentesque scelerisque, dui ipsum adipiscing
-          ante, vel ullamcorper nisl sapien id arcu. Nullam egestas diam eu
-          felis mollis sit amet cursus enim vehicula. Quisque eu tellus id erat
-          pellentesque consequat. Maecenas fermentum faucibus magna, eget dictum
-          nisi congue sed. Quisque a justo a nisi eleifend facilisis sit amet at
-          augue. Sed a sapien vitae augue hendrerit porta vel eu ligula. Proin
-          enim urna, faucibus in vestibulum tincidunt, commodo sit amet orci.
-          Vestibulum ac sem urna, quis mattis urna. Nam eget ullamcorper ligula.
-          Nam volutpat, arcu vel auctor dignissim, tortor nisi sodales enim, et
-          vestibulum nulla dui id ligula. Nam ullamcorper, augue ut interdum
-          vulputate, eros mauris lobortis sapien, ac sodales dui eros ac elit.
+          <Stack.down>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+            consectetur molestie faucibus. Phasellus iaculis pellentesque felis
+            eu fringilla. Ut in sollicitudin nisi. Praesent in mauris tortor.
+            Nam interdum, magna eu pellentesque scelerisque, dui ipsum
+            adipiscing ante, vel ullamcorper nisl sapien id arcu. Nullam egestas
+            diam eu felis mollis sit amet cursus enim vehicula. Quisque eu
+            tellus id erat pellentesque consequat. Maecenas fermentum faucibus
+            magna, eget dictum nisi congue sed.
+            <CollapsibleText text="Quisque a justo a nisi eleifend facilisis sit amet at augue. Sed a sapien vitae augue hendrerit porta vel eu ligula. Proin enim urna, faucibus in vestibulum tincidunt, commodo sit amet orci. Vestibulum ac sem urna, quis mattis urna. Nam eget ullamcorper ligula. Nam volutpat, arcu vel auctor dignissim, tortor nisi sodales enim, et vestibulum nulla dui id ligula. Nam ullamcorper, augue ut interdum vulputate, eros mauris lobortis sapien, ac sodales dui eros ac elit." />
+          </Stack.down>
         </Accordion.Section>
       </Accordion>
     </Stack.right>

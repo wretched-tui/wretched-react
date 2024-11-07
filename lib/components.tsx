@@ -5,8 +5,8 @@ import type {
   Button as WrButton,
   Checkbox as WrCheckbox,
   Collapsible as WrCollapsible,
+  CollapsibleText as WrCollapsibleText,
   ConsoleLog as WrConsoleLog,
-  // CollapsibleText,
   Digits as WrDigits,
   // Drawer,
   // Dropdown,
@@ -39,6 +39,7 @@ declare global {
       // views
       'wr-br': {}
       'wr-checkbox': WretchedView<typeof WrCheckbox>
+      'wr-collapsible-text': WretchedView<typeof WrCollapsibleText>
       'wr-console': WretchedView<typeof WrConsoleLog>
       'wr-digits': WretchedView<typeof WrDigits>
       'wr-input': WretchedView<typeof WrInput>
@@ -78,6 +79,11 @@ export function Checkbox(
   reactProps: JSX.IntrinsicElements['wr-checkbox'],
 ): JSX.Element {
   return <wr-checkbox {...reactProps} />
+}
+export function CollapsibleText(
+  reactProps: JSX.IntrinsicElements['wr-collapsible-text'],
+): JSX.Element {
+  return <wr-collapsible-text {...reactProps} />
 }
 export function ConsoleLog(
   reactProps: JSX.IntrinsicElements['wr-console'],
