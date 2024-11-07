@@ -41,8 +41,10 @@ typescript@^5.4.3:
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.4.3.tgz"
   integrity sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==
 
-"wretched-react@file:..":
+wretched-react@^1.0.5:
   version "1.0.5"
+  resolved "https://registry.yarnpkg.com/wretched-react/-/wretched-react-1.0.5.tgz#1aca80b7902ff0cf2ee87258976b92e3cb29d838"
+  integrity sha512-g0OmQNFnpW+P3ngICaPLWzbVJy2bGj1yRW64GXEnZGSYQFjOMyRTHBSAfyOmBmn0dzjdVJJjFyeNKFwkmHEGPA==
   dependencies:
     wretched "^1.0.9"
 
