@@ -26,16 +26,16 @@ import {
  * - "hello!" creates `TextLiteral`
  * - `TextLiteral` is added to a `TextContainer`, which is added to `TextProvider`
  *
- *     <Flow.down>
+ *     <Stack.down>
  *       hello!<br />
  *       <Box height={5} width={5} />
  *       goodbye!<br />
- *     </Flow.down>
+ *     </Stack.down>
  *
  * - "hello!" and <br/> create instances of `TextLiteral`
- * - Both are added to the same `TextContainer`, and added to `Flow.down`
- * - `<Box/>` is added to `Flow.down`
- * - When the "goodbye!" `TextLiteral` is added, the _last child_ of `Flow.down` is
+ * - Both are added to the same `TextContainer`, and added to `Stack.down`
+ * - `<Box/>` is added to `Stack.down`
+ * - When the "goodbye!" `TextLiteral` is added, the _last child_ of `Stack.down` is
  *   not a `TextContainer`, so a new `TextContainer` is created.
  * - no `TextProvider` here, so default text styles are used (left align, default
  *   font)
