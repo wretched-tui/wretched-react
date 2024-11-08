@@ -38,21 +38,12 @@ interface HostContext {
   window: Window
 }
 
-let _d = false
-export function debug() {
-  _d = true
-}
-
 export function render(screen: Screen, window: Window, rootNode: ReactNode) {
   function rerender() {
     screen.render()
   }
 
   function removeFromTextContainer(container: Container, child: View) {
-    if (_d) {
-      console.info('=========== removeFromTextContainer:46 ===========')
-      console.info({container, child})
-    }
     // find TextContainer with child in it, and remove
     for (const node of container.children) {
       if (node instanceof TextContainer && node.children.includes(child)) {
@@ -66,10 +57,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
   }
 
   function removeChild(container: Container, child: View) {
-    if (_d) {
-      console.info('=========== removeChild:63 ===========')
-      console.info({container, child})
-    }
     if (child.parent === container) {
       container.removeChild(child)
     } else if (child instanceof TextLiteral || child instanceof TextStyle) {
@@ -94,10 +81,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
         parentInstance.add(textContainer)
       }
 
-      if (_d) {
-        console.info('=========== appendChild to TextContainer:92 ===========')
-        console.info({child, textContainer, parentInstance})
-      }
       textContainer.add(child)
       return
     }
@@ -109,10 +92,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       index = undefined
     }
 
-    if (_d) {
-      console.info('=========== appendChild to View:106 ===========')
-      console.info({child, parentInstance, index})
-    }
     parentInstance.add(child, index)
   }
 
@@ -144,10 +123,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       _hostContext: HostContext,
       _internalInstanceHandle: Object,
     ) {
-      if (_d) {
-        console.info('=========== createInstance:149 ===========')
-        console.info({type, props})
-      }
       if ('children' in props) {
         const {children, ...remainder} = props
         props = remainder
@@ -187,10 +162,10 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
           return new Button(props as any)
         case 'wr-collapsible':
           return new Collapsible(props as any)
-        case 'wr-stack':
-          return new Stack(props as any)
         case 'wr-scrollable':
           return new Scrollable(props as any)
+        case 'wr-stack':
+          return new Stack(props as any)
         case 'wr-style':
           return new TextStyle(props as any)
         case 'wr-text':
@@ -213,10 +188,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       }
     },
     createTextInstance(text: string) {
-      if (_d) {
-        console.info('=========== createTextInstance:193 ===========')
-        console.info({text})
-      }
       return new TextLiteral(text)
     },
 
@@ -233,9 +204,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
     },
 
     appendChildToContainer(rootWindow: Window, child: View) {
-      if (_d) {
-        console.info('=========== appendChildToContainer:213 ===========')
-      }
       appendChild(rootWindow, child)
     },
     insertInContainerBefore(
@@ -243,9 +211,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       child: View,
       beforeChild: View,
     ) {
-      if (_d) {
-        console.info('=========== insertInContainerBefore:223 ===========')
-      }
       appendChild(rootWindow, child, beforeChild)
     },
 
@@ -281,10 +246,6 @@ export function render(screen: Screen, window: Window, rootNode: ReactNode) {
       _oldText: string,
       newText: string,
     ) {
-      if (_d) {
-        console.info('=========== reconciler.ts at line 261 ===========')
-        console.info({view: textInstance, newText})
-      }
       textInstance.text = newText
     },
 
