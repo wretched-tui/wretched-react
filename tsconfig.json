@@ -5,7 +5,8 @@
     "outDir": "dist",
     "target": "esnext",
     "module": "commonjs",
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "moduleResolution": "node",
     "declaration": true,
     "sourceMap": true,
@@ -14,6 +15,12 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
+      "react-dom": ["./node_modules/preact/compat/"],
+      "react-dom/*": ["./node_modules/preact/compat/*"]
+    }
   }
 }

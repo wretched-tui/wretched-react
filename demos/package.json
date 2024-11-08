@@ -9,6 +9,7 @@
     "clean": "rm -rf dist/"
   },
   "dependencies": {
+    "preact": "^10.24.3",
     "react": "^18.3.1",
     "react-reconciler": "^0.29.2",
     "wretched": "^1.0.11",
