@@ -48,6 +48,11 @@ wretched-react@^1.0.5:
   dependencies:
     wretched "^1.0.9"
 
+wretched@^1.0.11:
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/wretched/-/wretched-1.0.11.tgz#c08c2675eb5ad57a3df6a7d012d04924ade65478"
+  integrity sha512-wQTip6hBKZrBb1SlHjMMSMYN4IyFq8F7IAwDqTbC/51oUZZwW+YGLrymD9qb1s/v2OZ8oJhXFlqH80dwydlNhA==
+
 wretched@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/wretched/-/wretched-1.0.9.tgz#5782b8fbc493b1932a2502207be41c9777b96895"
