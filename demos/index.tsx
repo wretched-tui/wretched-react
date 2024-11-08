@@ -20,6 +20,7 @@ import {
   Style,
   Tabs,
   Text,
+  Tree,
 } from 'wretched-react'
 import {run} from 'wretched-react'
 import {Border} from 'wretched'
@@ -119,7 +120,15 @@ function Demo() {
                 👋
               </Tabs.Section>
               <Tabs.Section title="Another Example">
-                I don't have one yet.
+                <Tree
+                  title="b"
+                  data={[
+                    {title: 'first', children: [{title: 'third'}]},
+                    {title: 'second'},
+                  ]}
+                  render={data => data.title}
+                  getChildren={data => data.children}
+                />
               </Tabs.Section>
             </Tabs>
             <Input

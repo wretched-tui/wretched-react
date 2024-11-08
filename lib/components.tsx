@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import type {
   Accordion as WrAccordion,
   Box as WrBox,
@@ -18,8 +18,9 @@ import type {
   Separator as WrSeparator,
   Slider as WrSlider,
   Space as WrSpace,
-  // Tree,
+  Tree as WrTree,
   Tabs as WrTabs,
+  ViewProps,
 } from 'wretched'
 import {TextProvider, TextStyle} from './components/TextReact'
 
@@ -48,6 +49,7 @@ declare global {
       'wr-separator': WretchedView<typeof WrSeparator>
       'wr-slider': WretchedView<typeof WrSlider>
       'wr-space': WretchedView<typeof WrSpace>
+      'wr-tree': ViewProps
 
       // "simple" containers
       'wr-box': WretchedContainer<typeof WrBox>
@@ -161,6 +163,23 @@ export function Space(
   reactProps: JSX.IntrinsicElements['wr-space'],
 ): JSX.Element {
   return <wr-space {...reactProps} />
+}
+
+interface TreeProps<T> extends ViewProps {
+  data: T[]
+  render: (datum: T) => React.ReactNode
+  getChildren?: (datum: T) => T[] | undefined
+  title: React.ReactNode | string
+}
+export function Tree<T>(reactProps: TreeProps<T>): JSX.Element {
+  const {title, ...props} = reactProps
+  const titleView = useMemo(() => {
+    if (typeof title === 'string') {
+      return <wr-text>{title}</wr-text>
+    }
+    return title
+  }, [title])
+  return <wr-tree {...props}>{titleView}</wr-tree>
 }
 
 ////
